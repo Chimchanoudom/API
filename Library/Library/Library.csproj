@@ -1,0 +1,440 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0C186AD2-AE03-4F0E-9B30-C0F8A7783712}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Library</RootNamespace>
+    <AssemblyName>Library</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="addbook.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="addbook.Designer.cs">
+      <DependentUpon>addbook.cs</DependentUpon>
+    </Compile>
+    <Compile Include="addborrow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="addborrow.Designer.cs">
+      <DependentUpon>addborrow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="addexpense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="addexpense.Designer.cs">
+      <DependentUpon>addexpense.cs</DependentUpon>
+    </Compile>
+    <Compile Include="addexpense_type.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="addexpense_type.Designer.cs">
+      <DependentUpon>addexpense_type.cs</DependentUpon>
+    </Compile>
+    <Compile Include="addimport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="addimport.Designer.cs">
+      <DependentUpon>addimport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Addprintcard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Addprintcard.Designer.cs">
+      <DependentUpon>Addprintcard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="addreturn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="addreturn.Designer.cs">
+      <DependentUpon>addreturn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddStaff.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddStaff.Designer.cs">
+      <DependentUpon>AddStaff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="addstudent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="addstudent.Designer.cs">
+      <DependentUpon>addstudent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="book.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="book.Designer.cs">
+      <DependentUpon>book.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Borrow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Borrow.Designer.cs">
+      <DependentUpon>Borrow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Borrow_detail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Borrow_detail.Designer.cs">
+      <DependentUpon>Borrow_detail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="category.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="category.Designer.cs">
+      <DependentUpon>category.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class\encapulation.cs" />
+    <Compile Include="Class\mdi.cs" />
+    <Compile Include="Collage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Collage.Designer.cs">
+      <DependentUpon>Collage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="collectType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="collectType.Designer.cs">
+      <DependentUpon>collectType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Expense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Expense.Designer.cs">
+      <DependentUpon>Expense.cs</DependentUpon>
+    </Compile>
+    <Compile Include="expense_detail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="expense_detail.Designer.cs">
+      <DependentUpon>expense_detail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Expireandpenalty.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Expireandpenalty.Designer.cs">
+      <DependentUpon>Expireandpenalty.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="import.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="import.Designer.cs">
+      <DependentUpon>import.cs</DependentUpon>
+    </Compile>
+    <Compile Include="importbook.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="importbook.Designer.cs">
+      <DependentUpon>importbook.cs</DependentUpon>
+    </Compile>
+    <Compile Include="importBookc.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="importBookc.Designer.cs">
+      <DependentUpon>importBookc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="importdetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="importdetail.Designer.cs">
+      <DependentUpon>importdetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="login.Designer.cs">
+      <DependentUpon>login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="printcard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="printcard.Designer.cs">
+      <DependentUpon>printcard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="printcard_details.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="printcard_details.Designer.cs">
+      <DependentUpon>printcard_details.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="returnbook.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="returnbook.Designer.cs">
+      <DependentUpon>returnbook.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ReturnBookC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ReturnBookC.Designer.cs">
+      <DependentUpon>ReturnBookC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="return_detail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="return_detail.Designer.cs">
+      <DependentUpon>return_detail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Role_and_privilage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Role_and_privilage.Designer.cs">
+      <DependentUpon>Role_and_privilage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="staff.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="staff.Designer.cs">
+      <DependentUpon>staff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Addsupplier.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Addsupplier.Designer.cs">
+      <DependentUpon>Addsupplier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock.Designer.cs">
+      <DependentUpon>Stock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Stock_Detail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Stock_Detail.Designer.cs">
+      <DependentUpon>Stock_Detail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="student.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="student.Designer.cs">
+      <DependentUpon>student.cs</DependentUpon>
+    </Compile>
+    <Compile Include="suplier.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="suplier.Designer.cs">
+      <DependentUpon>suplier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="testing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="testing.Designer.cs">
+      <DependentUpon>testing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="User and Privilage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="User and Privilage.Designer.cs">
+      <DependentUpon>User and Privilage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BorrowBook.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BorrowBook.Designer.cs">
+      <DependentUpon>BorrowBook.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="addbook.resx">
+      <DependentUpon>addbook.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="addborrow.resx">
+      <DependentUpon>addborrow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="addexpense.resx">
+      <DependentUpon>addexpense.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="addexpense_type.resx">
+      <DependentUpon>addexpense_type.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="addimport.resx">
+      <DependentUpon>addimport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Addprintcard.resx">
+      <DependentUpon>Addprintcard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="addreturn.resx">
+      <DependentUpon>addreturn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddStaff.resx">
+      <DependentUpon>AddStaff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="addstudent.resx">
+      <DependentUpon>addstudent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="book.resx">
+      <DependentUpon>book.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Borrow.resx">
+      <DependentUpon>Borrow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Borrow_detail.resx">
+      <DependentUpon>Borrow_detail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="category.resx">
+      <DependentUpon>category.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Collage.resx">
+      <DependentUpon>Collage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="collectType.resx">
+      <DependentUpon>collectType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Expense.resx">
+      <DependentUpon>Expense.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="expense_detail.resx">
+      <DependentUpon>expense_detail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Expireandpenalty.resx">
+      <DependentUpon>Expireandpenalty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="import.resx">
+      <DependentUpon>import.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="importbook.resx">
+      <DependentUpon>importbook.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="importBookc.resx">
+      <DependentUpon>importBookc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="importdetail.resx">
+      <DependentUpon>importdetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="login.resx">
+      <DependentUpon>login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="printcard.resx">
+      <DependentUpon>printcard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="printcard_details.resx">
+      <DependentUpon>printcard_details.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="returnbook.resx">
+      <DependentUpon>returnbook.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReturnBookC.resx">
+      <DependentUpon>ReturnBookC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="return_detail.resx">
+      <DependentUpon>return_detail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Role_and_privilage.resx">
+      <DependentUpon>Role_and_privilage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="staff.resx">
+      <DependentUpon>staff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Addsupplier.resx">
+      <DependentUpon>Addsupplier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock.resx">
+      <DependentUpon>Stock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stock_Detail.resx">
+      <DependentUpon>Stock_Detail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="student.resx">
+      <DependentUpon>student.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="suplier.resx">
+      <DependentUpon>suplier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="testing.resx">
+      <DependentUpon>testing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="User and Privilage.resx">
+      <DependentUpon>User and Privilage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BorrowBook.resx">
+      <DependentUpon>BorrowBook.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\noimage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="img\report.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
