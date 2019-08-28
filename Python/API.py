@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy, inspect
 from flask_sqlalchemy_session import flask_scoped_session
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import sessionmaker
+from flask_sqlalchemy import SQLAlchemy, inspect
 
 app = Flask(__name__)
 engine = create_engine('postgresql://postgres:root@localhost/API')
@@ -358,7 +358,7 @@ class Role(db.Model):
     rolename = db.Column(db.String(255))
     privillageid = db.Column(db.Integer, db.ForeignKey('privillage.privillageid'), onupdate='CASCADE',
                              nullable=False)
-    User = db.relationship('User', backref='role', lazy=True)
+    User = db.relationship('User', backref='role', cascade="all, delete-orphan", lazy=True)
 
     def __init__(self, rolename, privilageid):
         self.rolename = rolename
@@ -426,6 +426,315 @@ class Collect(db.Model):
 
 # ----------------------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------Insert---------------------------------------------------------------
+
+def requesJson():
+    JSON = request.json
+    return JSON
+
+
+def Add(obj):
+    db.session.add(obj)
+    db.session.commit()
+
+
+@app.route('/staff_add', methods=['POST'])
+def staff_add():
+    # name, sex, dob, phone, email, address, photo
+    for itm in requesJson():
+        name = itm.get('name')
+        sex = itm.get('sex')
+        dob = itm.get('dob')
+        phone = itm.get('phone')
+        email = itm.get('email')
+        address = itm.get('address')
+        photo = itm.get('photo')
+        me = Staff(name, sex, dob, phone, email, address, photo)
+        Add(me)
+        return me.staffid + 'inserted Success !'
+
+
+@app.route('/user_add', methods=['POST'])
+def user_add():
+    # name, passwd, is_active, staffid, roleid
+    for itm in requesJson():
+        name = itm.get('name')
+        passwd = itm.get('passwd')
+        is_active = itm.get('active')
+        staffid = itm.get('staffid')
+        roleid = itm.get('roleid')
+        me = User(name, passwd, is_active, staffid, roleid)
+        Add(me)
+        return me.userid + 'inserted success !'
+
+
+@app.route('/role_add', methods=['POST'])
+def role_add():
+    for itm in requesJson():
+        name = itm.get('name')
+        privillageid = itm.get('privillageid')
+        me = Role(name, privillageid)
+        Add(me)
+        return me.roleid + 'inserted Success !'
+
+
+@app.route('/privillage_add', methods=['POST'])
+def privillage_add():
+    for itm in requesJson():
+        name = itm.get('name')
+        me = Privillage(name)
+        Add(me)
+        return me.privillageid + 'inserted Success !'
+
+
+@app.route('/student_add', methods=['POST'])
+def student_add():
+    #     name, sex, dob, phone, email, address, photo, creatDate, CreatBy
+    for itm in requesJson():
+        name = itm.get('name')
+        sex = itm.get('sex')
+        dob = itm.get('dob')
+        phone = itm.get('phone')
+        email = itm.get('email')
+        address = itm.get('address')
+        photo = itm.get('photo')
+        createDate = itm.get('createDate')
+        Createby = itm.get('createBy')
+        me = Student(name, sex, dob, phone, email, address, photo, createDate, Createby)
+        Add(me)
+        return me.studentid + 'inserted Success !'
+
+
+@app.route('/printcrad_add', methods=['POST'])
+def printcard_add():
+    for itm in requesJson():
+        printDate = itm.get('printDate')
+        total = itm.get('total')
+        Createby = itm.get('Creatby')
+        me = Printcard(printDate, total, Createby)
+        Add(me)
+        return me.printid
+
+
+@app.route('/print_detail_add', methods=['POST'])
+def print_detail_add():
+    for itm in requesJson():
+        printcardid = itm.get('printcardid')
+        cardid = itm.get('cardid')
+        ExpireDate = itm.get('ExpireDate')
+        Autonum = itm.get('Autonum')
+        bookQty = itm.get('bookQty')
+        price = itm.get('price')
+        studenid = itm.get('studenid')
+        me = Printcard_details(printcardid, cardid, ExpireDate, Autonum, bookQty, price, studenid)
+        Add(me)
+        return me.printcardDid
+
+
+@app.route('/book_add', methods=['POST'])
+def book_add():
+    # bookname, borrowprice, fineperday, Quantity, Creatby, CreatDate, Author, Catagoryid, photo
+    for itm in requesJson():
+        bname = itm.get('name')
+        borrowprice = itm.get('price')
+        finepereday = itm.get('fine')
+        Quantity = itm.get('qty')
+        Creatby = itm.get('createby')
+        CreatDate = itm.get('cratedate')
+        Author = itm.get('author')
+        Catagoryid = itm.get('catagoryid')
+        photo = itm.get('photo')
+        me = Book(bname, borrowprice, finepereday, Quantity, Creatby, CreatDate, Author, Catagoryid, photo)
+        Add(me)
+        return me.bookid + 'inserted Success !'
+
+
+@app.route('/catagory_add', methods=['POST'])
+def catagory_add():
+    for itm in requesJson():
+        name = itm.get('name')
+        me = Catagory(name)
+        Add(me)
+        return me.catId + 'inserted Success !'
+
+
+@app.route('/collect_add', methods=['POST'])
+def collect_add():
+    for itm in requesJson():
+        date = itm.get('date')
+        total = itm.get('total')
+        fromdate = itm.get('fromdate')
+        todate = itm.get('todate')
+        collectby = itm.get('collectby')
+        me = Collect(date, total, fromdate, todate, collectby)
+        Add(me)
+        return me.collectid
+
+
+@app.route('/collect_detail_add', methods=['POST'])
+def collect_detail_add():
+    for itm in requesJson():
+        id = itm.get('id')
+        subtotal = itm.get('subtotal')
+        collecttypeid = itm.get('typeid')
+        me = Collect_details(id, subtotal, collecttypeid)
+        Add(me)
+        return me.collectdid
+
+
+@app.route('/collect_type_add', methods=['POST'])
+def collect_type_add():
+    for itm in requesJson():
+        collecttype = itm.get('type')
+        me = Collecttype(collecttype)
+        Add(me)
+        return me.collecttypeid
+
+
+@app.route('/expense_add', methods=['POST'])
+def expense_add():
+    for itm in requesJson():
+        date = itm.get('date')
+        total = itm.get('total')
+        createby = itm.get('createby')
+        me = Expense(date, total, createby)
+        Add(me)
+        return me.expenseid
+
+
+@app.route('/expense_detail_add', methods=['POST'])
+def expense_detail_add():
+    for itm in requesJson():
+        id = itm.get('id')
+        amount = itm.get('amount')
+        expensetype = itm.get('type')
+        me = Expense_deltails(id, amount, expensetype)
+        Add(me)
+        return me.expenseDid
+
+
+@app.route('/expense_type_add', methods=['POST'])
+def expense_type_add():
+    for itm in requesJson():
+        name = itm.get('name')
+        me = Expense_type()
+        Add(me)
+        return me.expenseTid
+
+
+@app.route('/import_add', methods=['POST'])
+def import_add():
+    for itm in requesJson():
+        desc = itm.get('desc')
+        date = itm.get('date')
+        total = itm.get('total')
+        staff = itm.get('staff')
+        supplier = itm.get('supplier')
+        me = Import(desc, date, total, staff, supplier)
+        Add(me)
+        return me.importid
+
+
+@app.route('/import_detail_add', methods=['POST'])
+def import_detail_add():
+    for itm in requesJson():
+        autonum = itm.get('autonum')
+        qty = itm.get('qty')
+        cost = itm.get('cost')
+        subtotal = itm.get('subtotal')
+        bookid = itm.get('bookid')
+        importid = itm.get('importid')
+        me = Import_details(autonum, qty, cost, subtotal, bookid, importid)
+        Add(me)
+        return me.importDid
+
+
+@app.route('/importbook_add', methods=['POST'])
+def importbook_add():
+    for itm in requesJson():
+        importid = itm.get('importid')
+        barcode = itm.get('barcode')
+        importDid = itm.get('importDid')
+        me = Importbook(importid, barcode, importDid)
+        Add(me)
+        return me.importbookid
+
+
+@app.route('/supplier_add', methods=['POST'])
+def supplier_add():
+    for itm in requesJson():
+        name = itm.get('name')
+        phone = itm.get('phone')
+        email = itm.get('email')
+        address = itm.get('address')
+        createdate = itm.get('createdate')
+        createby = itm.get('createby')
+        me = Supplier(name, phone, email, address, createdate, createby)
+        Add(me)
+        return me.supid
+
+
+@app.route('stock_add', methods=['POST'])
+def stock_add():
+    for itm in requesJson():
+        detailid = itm.get('detailid')
+        autonum = itm.get('autonum')
+        status = itm.get('status')
+        me = Stock(detailid, autonum, status)
+        Add(me)
+        return me.stockid
+
+
+@app.route('/borrow_add', methods=['POST'])
+def borrow_add():
+    for itm in requesJson():
+        date=itm.get('date')
+        datereturn=itm.get('returndate')
+        total=itm.get('total')
+        staffid=itm.get('staffid')
+        studentid=itm.get('studentid')
+        cardid=itm.get('cardid')
+        me=Borrow(date,datereturn,total,staffid,studentid,cardid)
+        Add(me)
+        return me.borrowid
+
+
+@app.route('/borrow_detail_add', methods=['POST'])
+def borrow_detail_add():
+    for itm in requesJson():
+        autonum=itm.get('autonum')
+        bookid=itm.get('bookid')
+        barcode=itm.get('barcode')
+        status=itm.get('status')
+        me=Borrow_details(autonum,bookid,barcode,status)
+        Add(me)
+        return me.borrowDId
+
+
+@app.route('/return_add', methods=['POST'])
+def return_add():
+    for itm in requesJson():
+        returndate=itm.get('returndate')
+        fee=itm.get('fee')
+        staffid=itm.get('staffid')
+        studentid=itm.get('studentid')
+        me=Return(returndate,fee,staffid,studentid)
+        Add(me)
+        return me.returnid
+
+
+@app.route('/return_detail_add', methods=['POST'])
+def return_detail_add():
+    for itm in requesJson():
+        id=itm.get('returnid')
+        bookid=itm.get('bookid')
+        barcode=itm.get('barcode')
+        fine=itm.get('fine')
+        lateday=itm.get('lateday')
+        borrowid=itm.get('borrowid')
+        me=Return_details(id,bookid,barcode,fine,lateday,borrowid)
+        Add(me)
+        return me.returnDid
+
 
 if __name__ == "__main__":
     app.run()
