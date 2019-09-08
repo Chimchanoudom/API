@@ -3,8 +3,11 @@ from flask_sqlalchemy_session import flask_scoped_session
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_sqlalchemy import SQLAlchemy, inspect
+import psycopg2
 
 app = Flask(__name__)
+con = psycopg2.connect(database='API', user='postgres', password='root', host='localhost', port='5432')
+cur = con.cursor()
 engine = create_engine('postgresql://postgres:root@localhost/API')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/API'
 app.config['SQLALCHEMY_ECHO'] = True
@@ -20,7 +23,7 @@ db = SQLAlchemy(app)
 class Catagory(db.Model):
     catId = db.Column(db.Integer, primary_key=True)
     catName = db.Column(db.String(255))
-    book = db.relationship('Book', backref='catagory', lazy=True)
+    book = db.relationship('Book', backref='catagory', lazy='dynamic', )
 
     def __init__(self, name):
         self.catName = name
@@ -32,10 +35,11 @@ class Book(db.Model):
     borrowprice = db.Column(db.Float)
     finePerDay = db.Column(db.Float)
     quantity = db.Column(db.Integer)
-    Creatby = db.Column(db.Integer)
+    Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
+                        nullable=False)
     CreatDate = db.Column(db.DateTime)
     Author = db.Column(db.String(255))
-    Categoryid = db.Column(db.Integer, db.ForeignKey('catagory.catId'), onupdate='CASCADE',
+    Categoryid = db.Column(db.Integer, db.ForeignKey('catagory.catId', onupdate='CASCADE', ondelete='CASCADE'),
                            nullable=False)
     photo = db.Column(db.LargeBinary)
     borrow = db.relationship('Borrow_details', backref='book', lazy=True)
@@ -56,9 +60,10 @@ class Book(db.Model):
 
 class Borrow_details(db.Model):
     borrowDId = db.Column(db.Integer, primary_key=True)
-    borrowid = db.Column(db.Integer, db.ForeignKey('borrow.borrowid'), onupdate='CASCADE', nullable=False)
+    borrowid = db.Column(db.Integer, db.ForeignKey('borrow.borrowid', onupdate='CASCADE', ondelete='CASCADE'),
+                         nullable=False)
     AutoNum = db.Column(db.Integer)
-    Bookid = db.Column(db.Integer, db.ForeignKey('book.bookid'), onupdate='CASCADE', nullable=False)
+    Bookid = db.Column(db.Integer, db.ForeignKey('book.bookid', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
     barcode = db.Column(db.String(255))
     status = db.Column(db.String(255))
     returndetail = db.relationship('Return_details', backref='borrow_details', lazy=True)
@@ -75,7 +80,7 @@ class Borrow(db.Model):
     borrowDate = db.Column(db.DateTime)
     dateReturn = db.Column(db.DateTime)
     total = db.Column(db.Float)
-    staffid = db.Column(db.Integer, db.ForeignKey('staff.staffid'), onupdate='CASCADE',
+    staffid = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
     studentid = db.Column(db.Integer, db.ForeignKey('student.studentid'), nullable=False)
     cardid = db.Column(db.String(255))
@@ -93,9 +98,9 @@ class Return(db.Model):
     returnid = db.Column(db.Integer, primary_key=True)
     returnDate = db.Column(db.DateTime)
     fee = db.Column(db.Float)
-    staffid = db.Column(db.Integer, db.ForeignKey('staff.staffid'), onupdate='CASCADE',
+    staffid = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
-    studentid = db.Column(db.Integer, db.ForeignKey('student.studentid'), onupdate='CASCADE',
+    studentid = db.Column(db.Integer, db.ForeignKey('student.studentid', onupdate='CASCADE', ondelete='CASCADE'),
                           nullable=False)
     return_details = db.relationship('Return_details', backref='return', lazy=True)
 
@@ -108,13 +113,13 @@ class Return(db.Model):
 
 class Return_details(db.Model):
     returnDid = db.Column(db.Integer, primary_key=True)
-    returnid = db.Column(db.Integer, db.ForeignKey('return.returnid'), onupdate='CASCADE',
+    returnid = db.Column(db.Integer, db.ForeignKey('return.returnid', onupdate='CASCADE', ondelete='CASCADE'),
                          nullable=False)
-    bookid = db.Column(db.Integer, db.ForeignKey('book.bookid'), onupdate='CASCADE', nullable=False)
+    bookid = db.Column(db.Integer, db.ForeignKey('book.bookid', onupdate='CASCADE', ondelete='CASCADE'), nullable=False)
     barcode = db.Column(db.String(255))
     fine = db.Column(db.Float)
     lateDay = db.Column(db.Integer)
-    borrowid = db.Column(db.Integer, db.ForeignKey('borrow_details.borrowDId'), onupdate='CASCADE',
+    borrowid = db.Column(db.Integer, db.ForeignKey('borrow_details.borrowDId', onupdate='CASCADE', ondelete='CASCADE'),
                          nullable=False)
 
     def __init__(self, returnid, bookid, barcode, fine, lateday, borrowid):
@@ -136,9 +141,9 @@ class Student(db.Model):
     Address = db.Column(db.String(255))
     photo = db.Column(db.LargeBinary)
     CreatDate = db.Column(db.DateTime)
-    Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid'), onupdate='CASCADE',
+    Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
-    printcard = db.relationship('Printcard_Details', backref='student', lazy=True)
+    printcard = db.relationship('Printcard_details', backref='student', lazy=True)
 
     def __init__(self, name, sex, dob, phone, email, address, photo, creatDate, CreatBy):
         self.name = name
@@ -156,7 +161,7 @@ class Printcard(db.Model):
     printid = db.Column(db.Integer, primary_key=True)
     printDate = db.Column(db.DateTime)
     total = db.Column(db.Integer)
-    Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid'), onupdate='CASCADE',
+    Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
     printCard_Details = db.relationship('Printcard_details', backref='printcard', lazy=True)
 
@@ -168,14 +173,14 @@ class Printcard(db.Model):
 
 class Printcard_details(db.Model):
     printcardDid = db.Column(db.Integer, primary_key=True)
-    printcardid = db.Column(db.Integer, db.ForeignKey('printcard.printid'), onupdate='CASCADE',
+    printcardid = db.Column(db.Integer, db.ForeignKey('printcard.printid', onupdate='CASCADE', ondelete='CASCADE'),
                             nullable=False)
     cardid = db.Column(db.String(255))
     ExpireDate = db.Column(db.DateTime)
     AutoNum = db.Column(db.Integer)
     bookQuantity = db.Column(db.Integer)
     price = db.Column(db.Float)
-    studentid = db.Column(db.Integer, db.ForeignKey('student.studentid'), onupdate='CASCADE',
+    studentid = db.Column(db.Integer, db.ForeignKey('student.studentid', onupdate='CASCADE', ondelete='CASCADE'),
                           nullable=False)
 
     def __init__(self, printcardid, cardid, ExpireDate, Autonum, bookQty, price, studentid):
@@ -197,6 +202,7 @@ class Staff(db.Model):
     email = db.Column(db.String(255))
     Address = db.Column(db.String(255))
     photo = db.Column(db.LargeBinary)
+    book = db.relationship('Book', backref='staff', lazy=True)
     printcard = db.relationship('Printcard', backref='staff', lazy=True)
     student = db.relationship('Student', backref='staff', lazy=True)
     expense = db.relationship('Expense', backref='staff', lazy=True)
@@ -204,7 +210,7 @@ class Staff(db.Model):
     borrow = db.relationship('Borrow', backref='staff', lazy=True)
     returnbook = db.relationship('Return', backref='staff', lazy=True)
     Import = db.relationship('Import', backref='staff', lazy=True)
-    supplire = db.relationship('Supplire', backref='staff', lazy=True)
+    supplire = db.relationship('Supplier', backref='staff', lazy=True)
     user = db.relationship('User', backref='staff', lazy=True, uselist=False)
 
     def __init__(self, name, sex, dob, phone, email, address, photo):
@@ -224,7 +230,7 @@ class Supplier(db.Model):
     email = db.Column(db.String(255))
     Address = db.Column(db.String(255))
     CreatDate = db.Column(db.DateTime)
-    Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid'), onupdate='CASCADE',
+    Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
     importbook = db.relationship('Import', backref='supplier', lazy=True)
 
@@ -242,9 +248,9 @@ class Import(db.Model):
     desciption = db.Column(db.String(255))
     importDate = db.Column(db.DateTime)
     total = db.Column(db.Float)
-    CreatBy = db.Column(db.Integer, db.ForeignKey('staff.staffid'), onupdate='CASCADE',
+    CreatBy = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
-    supid = db.Column(db.Integer, db.ForeignKey('supplier.supid'), onupdate='CASCADE',
+    supid = db.Column(db.Integer, db.ForeignKey('supplier.supid', onupdate='CASCADE', ondelete='CASCADE'),
                       nullable=False)
     importDetail = db.relationship('Import_details', backref='import', lazy=True)
     importbook = db.relationship('Importbook', backref='import', lazy=True)
@@ -263,9 +269,9 @@ class Import_details(db.Model):
     Quantity = db.Column(db.Integer)
     cost = db.Column(db.Float)
     subtotal = db.Column(db.Float)
-    bookid = db.Column(db.Integer, db.ForeignKey('book.bookid'), onupdate='CASCADE',
+    bookid = db.Column(db.Integer, db.ForeignKey('book.bookid', onupdate='CASCADE', ondelete='CASCADE'),
                        nullable=False)
-    importid = db.Column(db.Integer, db.ForeignKey('import.importid'), onupdate='CASCADE',
+    importid = db.Column(db.Integer, db.ForeignKey('import.importid', onupdate='CASCADE', ondelete='CASCADE'),
                          nullable=False)
     importbook = db.relationship('Importbook', backref='import_details', lazy=True)
     stock = db.relationship('Stock', backref='import_details', lazy=True)
@@ -281,10 +287,11 @@ class Import_details(db.Model):
 
 class Importbook(db.Model):
     importbookid = db.Column(db.Integer, primary_key=True)
-    importid = db.Column(db.Integer, db.ForeignKey('import.importid'), onupdate='CASCADE',
+    importid = db.Column(db.Integer, db.ForeignKey('import.importid', onupdate='CASCADE', ondelete='CASCADE'),
                          nullable=False)
     bacode = db.Column(db.String(255))
-    importdetailid = db.Column(db.Integer, db.ForeignKey('import_details.importDid'), onupdate='CASCADE',
+    importdetailid = db.Column(db.Integer,
+                               db.ForeignKey('import_details.importDid', onupdate='CASCADE', ondelete='CASCADE'),
 
                                nullable=False)
 
@@ -296,7 +303,8 @@ class Importbook(db.Model):
 
 class Stock(db.Model):
     stockid = db.Column(db.Integer, primary_key=True)
-    importdetailid = db.Column(db.Integer, db.ForeignKey('import_details.importDid'), onupdate='CASCADE',
+    importdetailid = db.Column(db.Integer,
+                               db.ForeignKey('import_details.importDid', onupdate='CASCADE', ondelete='CASCADE'),
                                nullable=False)
     autonum = db.Column(db.Integer)
     Status = db.Column(db.Integer)
@@ -311,7 +319,7 @@ class Expense(db.Model):
     expenseid = db.Column(db.Integer, primary_key=True)
     expenseDate = db.Column(db.DateTime)
     total = db.Column(db.Float)
-    CreateBy = db.Column(db.Integer, db.ForeignKey('staff.staffid'), onupdate='CASCADE',
+    CreateBy = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                          nullable=False)
     expense_details = db.relationship('Expense_deltails', backref='expense', lazy=True)
 
@@ -323,10 +331,11 @@ class Expense(db.Model):
 
 class Expense_deltails(db.Model):
     expenseDid = db.Column(db.Integer, primary_key=True)
-    expenseid = db.Column(db.Integer, db.ForeignKey('expense.expenseid'), onupdate='CASCADE',
+    expenseid = db.Column(db.Integer, db.ForeignKey('expense.expenseid', onupdate='CASCADE', ondelete='CASCADE'),
                           nullable=False)
     amount = db.Column(db.Float)
-    expenseType = db.Column(db.Integer, db.ForeignKey('expense_type.expenseTid'), onupdate='CASCADE',
+    expenseType = db.Column(db.Integer,
+                            db.ForeignKey('expense_type.expenseTid', onupdate='CASCADE', ondelete='CASCADE'),
                             nullable=False)
 
     def __init__(self, expanseid, amount, expensetype):
@@ -356,7 +365,8 @@ class Privillage(db.Model):
 class Role(db.Model):
     roleid = db.Column(db.Integer, primary_key=True)
     rolename = db.Column(db.String(255))
-    privillageid = db.Column(db.Integer, db.ForeignKey('privillage.privillageid'), onupdate='CASCADE',
+    privillageid = db.Column(db.Integer,
+                             db.ForeignKey('privillage.privillageid', onupdate='CASCADE', ondelete='CASCADE'),
                              nullable=False)
     User = db.relationship('User', backref='role', cascade="all, delete-orphan", lazy=True)
 
@@ -370,9 +380,9 @@ class User(db.Model):
     username = db.Column(db.String(255))
     password = db.Column(db.String(255))
     is_active = db.Column(db.String(10))
-    staffid = db.Column(db.Integer, db.ForeignKey('staff.staffid'), onupdate='CASCADE',
+    staffid = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
-    roleid = db.Column(db.Integer, db.ForeignKey('role.roleid'), onupdate='CASCADE',
+    roleid = db.Column(db.Integer, db.ForeignKey('role.roleid', onupdate='CASCADE', ondelete='CASCADE'),
                        nullable=False)
 
     def __init__(self, name, passwd, is_active, staffid, roleid):
@@ -394,10 +404,11 @@ class Collecttype(db.Model):
 
 class Collect_details(db.Model):
     collectdid = db.Column(db.Integer, primary_key=True)
-    collectid = db.Column(db.Integer, db.ForeignKey('collect.collectid'), onupdate='CASCADE',
+    collectid = db.Column(db.Integer, db.ForeignKey('collect.collectid', onupdate='CASCADE', ondelete='CASCADE'),
                           nullable=False)
     subtotal = db.Column(db.Float)
-    collecttypeid = db.Column(db.Integer, db.ForeignKey('collecttype.collecttypeid'), onupdate='CASCADE',
+    collecttypeid = db.Column(db.Integer,
+                              db.ForeignKey('collecttype.collecttypeid', onupdate='CASCADE', ondelete='CASCADE'),
                               nullable=False)
 
     def __init__(self, collectid, subtotal, collecttypeid):
@@ -412,7 +423,7 @@ class Collect(db.Model):
     total = db.Column(db.Float)
     fromDate = db.Column(db.DateTime)
     todate = db.Column(db.DateTime)
-    Collectby = db.Column(db.Integer, db.ForeignKey('staff.staffid'), onupdate='CASCADE',
+    Collectby = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                           nullable=False)
     collectDetails = db.relationship('Collect_details', backref='collect', lazy=True)
 
@@ -616,7 +627,7 @@ def expense_detail_add():
 def expense_type_add():
     for itm in requesJson():
         name = itm.get('name')
-        me = Expense_type()
+        me = Expense_type(name)
         Add(me)
         return me.expenseTid
 
@@ -673,7 +684,7 @@ def supplier_add():
         return me.supid
 
 
-@app.route('stock_add', methods=['POST'])
+@app.route('/stock_add', methods=['POST'])
 def stock_add():
     for itm in requesJson():
         detailid = itm.get('detailid')
@@ -687,13 +698,13 @@ def stock_add():
 @app.route('/borrow_add', methods=['POST'])
 def borrow_add():
     for itm in requesJson():
-        date=itm.get('date')
-        datereturn=itm.get('returndate')
-        total=itm.get('total')
-        staffid=itm.get('staffid')
-        studentid=itm.get('studentid')
-        cardid=itm.get('cardid')
-        me=Borrow(date,datereturn,total,staffid,studentid,cardid)
+        date = itm.get('date')
+        datereturn = itm.get('returndate')
+        total = itm.get('total')
+        staffid = itm.get('staffid')
+        studentid = itm.get('studentid')
+        cardid = itm.get('cardid')
+        me = Borrow(date, datereturn, total, staffid, studentid, cardid)
         Add(me)
         return me.borrowid
 
@@ -701,11 +712,11 @@ def borrow_add():
 @app.route('/borrow_detail_add', methods=['POST'])
 def borrow_detail_add():
     for itm in requesJson():
-        autonum=itm.get('autonum')
-        bookid=itm.get('bookid')
-        barcode=itm.get('barcode')
-        status=itm.get('status')
-        me=Borrow_details(autonum,bookid,barcode,status)
+        autonum = itm.get('autonum')
+        bookid = itm.get('bookid')
+        barcode = itm.get('barcode')
+        status = itm.get('status')
+        me = Borrow_details(autonum, bookid, barcode, status)
         Add(me)
         return me.borrowDId
 
@@ -713,11 +724,11 @@ def borrow_detail_add():
 @app.route('/return_add', methods=['POST'])
 def return_add():
     for itm in requesJson():
-        returndate=itm.get('returndate')
-        fee=itm.get('fee')
-        staffid=itm.get('staffid')
-        studentid=itm.get('studentid')
-        me=Return(returndate,fee,staffid,studentid)
+        returndate = itm.get('returndate')
+        fee = itm.get('fee')
+        staffid = itm.get('staffid')
+        studentid = itm.get('studentid')
+        me = Return(returndate, fee, staffid, studentid)
         Add(me)
         return me.returnid
 
@@ -725,16 +736,315 @@ def return_add():
 @app.route('/return_detail_add', methods=['POST'])
 def return_detail_add():
     for itm in requesJson():
-        id=itm.get('returnid')
-        bookid=itm.get('bookid')
-        barcode=itm.get('barcode')
-        fine=itm.get('fine')
-        lateday=itm.get('lateday')
-        borrowid=itm.get('borrowid')
-        me=Return_details(id,bookid,barcode,fine,lateday,borrowid)
+        id = itm.get('returnid')
+        bookid = itm.get('bookid')
+        barcode = itm.get('barcode')
+        fine = itm.get('fine')
+        lateday = itm.get('lateday')
+        borrowid = itm.get('borrowid')
+        me = Return_details(id, bookid, barcode, fine, lateday, borrowid)
         Add(me)
         return me.returnDid
 
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------Get All--------------------------------------------------------------
+def todict(obj):
+    return {c.key: getattr(obj, c.key)
+            for c in inspect(obj).mapper.column_attrs}
+
+
+def addTolist(obj):
+    js = []
+    for itm in obj:
+        data = todict(itm)
+        js.append(data)
+    return js
+
+
+@app.route('/staff_all', methods=['POST'])
+def staff_all():
+    # name, sex, dob, phone, email, address, photo
+    find = Staff.query.all()
+    return jsonify(addTolist(find))
+
+
+@app.route('/user_all', methods=['POST'])
+def user_all():
+    js = []
+    cur.execute('SELECT * FROM user_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'userid': itm[0], 'username': itm[1], 'password': itm[2], 'is_Active': itm[3], 'staffname': itm[4],
+                'rolename': itm[5]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/role_all', methods=['POST'])
+def role_all():
+    js = []
+    cur.execute('SELECT * FROM role_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'roleid': itm[0], 'rolename': itm[1], 'privillagename': itm[2]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/privillage_all', methods=['POST'])
+def privillage_all():
+    js = []
+    cur.execute('SELECT * FROM privillage_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'printid': itm[0], 'printDate': itm[1], 'total': itm[2], 'staffname': itm[3]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/student_all', methods=['POST'])
+def student_all():
+    #     name, sex, dob, phone, email, address, photo, creatDate, CreatBy
+    js = []
+    cur.execute('SELECT * FROM student_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'studentid': itm[0], 'name': itm[1], 'sex': itm[2], 'dateofbirth': itm[3],'phone':itm[4],'email':itm[5],'Address':itm[6],'photo':itm[7],'creatdate':itm[8],'staffname':itm[9]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/printcrad_all', methods=['POST'])
+def printcard_all():
+    for itm in requesJson():
+        printDate = itm.get('printDate')
+        total = itm.get('total')
+        Createby = itm.get('Creatby')
+        me = Printcard(printDate, total, Createby)
+        Add(me)
+        return me.printid
+
+
+# @app.route('/print_detail_add', methods=['POST'])
+# def print_detail_add():
+#     for itm in requesJson():
+#         printcardid = itm.get('printcardid')
+#         cardid = itm.get('cardid')
+#         ExpireDate = itm.get('ExpireDate')
+#         Autonum = itm.get('Autonum')
+#         bookQty = itm.get('bookQty')
+#         price = itm.get('price')
+#         studenid = itm.get('studenid')
+#         me = Printcard_details(printcardid, cardid, ExpireDate, Autonum, bookQty, price, studenid)
+#         Add(me)
+#         return me.printcardDid
+#
+#
+# @app.route('/book_add', methods=['POST'])
+# def book_add():
+#     # bookname, borrowprice, fineperday, Quantity, Creatby, CreatDate, Author, Catagoryid, photo
+#     for itm in requesJson():
+#         bname = itm.get('name')
+#         borrowprice = itm.get('price')
+#         finepereday = itm.get('fine')
+#         Quantity = itm.get('qty')
+#         Creatby = itm.get('createby')
+#         CreatDate = itm.get('cratedate')
+#         Author = itm.get('author')
+#         Catagoryid = itm.get('catagoryid')
+#         photo = itm.get('photo')
+#         me = Book(bname, borrowprice, finepereday, Quantity, Creatby, CreatDate, Author, Catagoryid, photo)
+#         Add(me)
+#         return me.bookid + 'inserted Success !'
+#
+#
+# @app.route('/catagory_add', methods=['POST'])
+# def catagory_add():
+#     for itm in requesJson():
+#         name = itm.get('name')
+#         me = Catagory(name)
+#         Add(me)
+#         return me.catId + 'inserted Success !'
+#
+#
+# @app.route('/collect_add', methods=['POST'])
+# def collect_add():
+#     for itm in requesJson():
+#         date = itm.get('date')
+#         total = itm.get('total')
+#         fromdate = itm.get('fromdate')
+#         todate = itm.get('todate')
+#         collectby = itm.get('collectby')
+#         me = Collect(date, total, fromdate, todate, collectby)
+#         Add(me)
+#         return me.collectid
+#
+#
+# @app.route('/collect_detail_add', methods=['POST'])
+# def collect_detail_add():
+#     for itm in requesJson():
+#         id = itm.get('id')
+#         subtotal = itm.get('subtotal')
+#         collecttypeid = itm.get('typeid')
+#         me = Collect_details(id, subtotal, collecttypeid)
+#         Add(me)
+#         return me.collectdid
+#
+#
+# @app.route('/collect_type_add', methods=['POST'])
+# def collect_type_add():
+#     for itm in requesJson():
+#         collecttype = itm.get('type')
+#         me = Collecttype(collecttype)
+#         Add(me)
+#         return me.collecttypeid
+#
+#
+# @app.route('/expense_add', methods=['POST'])
+# def expense_add():
+#     for itm in requesJson():
+#         date = itm.get('date')
+#         total = itm.get('total')
+#         createby = itm.get('createby')
+#         me = Expense(date, total, createby)
+#         Add(me)
+#         return me.expenseid
+#
+#
+# @app.route('/expense_detail_add', methods=['POST'])
+# def expense_detail_add():
+#     for itm in requesJson():
+#         id = itm.get('id')
+#         amount = itm.get('amount')
+#         expensetype = itm.get('type')
+#         me = Expense_deltails(id, amount, expensetype)
+#         Add(me)
+#         return me.expenseDid
+#
+#
+# @app.route('/expense_type_add', methods=['POST'])
+# def expense_type_add():
+#     for itm in requesJson():
+#         name = itm.get('name')
+#         me = Expense_type(name)
+#         Add(me)
+#         return me.expenseTid
+#
+#
+# @app.route('/import_add', methods=['POST'])
+# def import_add():
+#     for itm in requesJson():
+#         desc = itm.get('desc')
+#         date = itm.get('date')
+#         total = itm.get('total')
+#         staff = itm.get('staff')
+#         supplier = itm.get('supplier')
+#         me = Import(desc, date, total, staff, supplier)
+#         Add(me)
+#         return me.importid
+#
+#
+# @app.route('/import_detail_add', methods=['POST'])
+# def import_detail_add():
+#     for itm in requesJson():
+#         autonum = itm.get('autonum')
+#         qty = itm.get('qty')
+#         cost = itm.get('cost')
+#         subtotal = itm.get('subtotal')
+#         bookid = itm.get('bookid')
+#         importid = itm.get('importid')
+#         me = Import_details(autonum, qty, cost, subtotal, bookid, importid)
+#         Add(me)
+#         return me.importDid
+#
+#
+# @app.route('/importbook_add', methods=['POST'])
+# def importbook_add():
+#     for itm in requesJson():
+#         importid = itm.get('importid')
+#         barcode = itm.get('barcode')
+#         importDid = itm.get('importDid')
+#         me = Importbook(importid, barcode, importDid)
+#         Add(me)
+#         return me.importbookid
+#
+#
+# @app.route('/supplier_add', methods=['POST'])
+# def supplier_add():
+#     for itm in requesJson():
+#         name = itm.get('name')
+#         phone = itm.get('phone')
+#         email = itm.get('email')
+#         address = itm.get('address')
+#         createdate = itm.get('createdate')
+#         createby = itm.get('createby')
+#         me = Supplier(name, phone, email, address, createdate, createby)
+#         Add(me)
+#         return me.supid
+#
+#
+# @app.route('/stock_add', methods=['POST'])
+# def stock_add():
+#     for itm in requesJson():
+#         detailid = itm.get('detailid')
+#         autonum = itm.get('autonum')
+#         status = itm.get('status')
+#         me = Stock(detailid, autonum, status)
+#         Add(me)
+#         return me.stockid
+#
+#
+# @app.route('/borrow_add', methods=['POST'])
+# def borrow_add():
+#     for itm in requesJson():
+#         date = itm.get('date')
+#         datereturn = itm.get('returndate')
+#         total = itm.get('total')
+#         staffid = itm.get('staffid')
+#         studentid = itm.get('studentid')
+#         cardid = itm.get('cardid')
+#         me = Borrow(date, datereturn, total, staffid, studentid, cardid)
+#         Add(me)
+#         return me.borrowid
+#
+#
+# @app.route('/borrow_detail_add', methods=['POST'])
+# def borrow_detail_add():
+#     for itm in requesJson():
+#         autonum = itm.get('autonum')
+#         bookid = itm.get('bookid')
+#         barcode = itm.get('barcode')
+#         status = itm.get('status')
+#         me = Borrow_details(autonum, bookid, barcode, status)
+#         Add(me)
+#         return me.borrowDId
+#
+#
+# @app.route('/return_add', methods=['POST'])
+# def return_add():
+#     for itm in requesJson():
+#         returndate = itm.get('returndate')
+#         fee = itm.get('fee')
+#         staffid = itm.get('staffid')
+#         studentid = itm.get('studentid')
+#         me = Return(returndate, fee, staffid, studentid)
+#         Add(me)
+#         return me.returnid
+#
+#
+# @app.route('/return_detail_add', methods=['POST'])
+# def return_detail_add():
+#     for itm in requesJson():
+#         id = itm.get('returnid')
+#         bookid = itm.get('bookid')
+#         barcode = itm.get('barcode')
+#         fine = itm.get('fine')
+#         lateday = itm.get('lateday')
+#         borrowid = itm.get('borrowid')
+#         me = Return_details(id, bookid, barcode, fine, lateday, borrowid)
+#         Add(me)
+#         return me.returnDid
 
 if __name__ == "__main__":
     app.run()
