@@ -11,7 +11,7 @@ cur = con.cursor()
 engine = create_engine('postgresql://postgres:root@localhost/API')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/API'
 app.config['SQLALCHEMY_ECHO'] = True
-SQLALCHEMY_TRACK_MODIFICATIONS = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.debug = True
 session_factory = sessionmaker(bind=engine)
 session = flask_scoped_session(session_factory, app)
@@ -794,13 +794,8 @@ def role_all():
 
 @app.route('/privillage_all', methods=['POST'])
 def privillage_all():
-    js = []
-    cur.execute('SELECT * FROM privillage_all')
-    result = cur.fetchall()
-    for itm in result:
-        data = {'printid': itm[0], 'printDate': itm[1], 'total': itm[2], 'staffname': itm[3]}
-        js.append(data)
-    return jsonify(js)
+    find = Privillage.query.all()
+    return jsonify(addTolist(find))
 
 
 @app.route('/student_all', methods=['POST'])
@@ -810,241 +805,373 @@ def student_all():
     cur.execute('SELECT * FROM student_all')
     result = cur.fetchall()
     for itm in result:
-        data = {'studentid': itm[0], 'name': itm[1], 'sex': itm[2], 'dateofbirth': itm[3],'phone':itm[4],'email':itm[5],'Address':itm[6],'photo':itm[7],'creatdate':itm[8],'staffname':itm[9]}
+        data = {'studentid': itm[0], 'name': itm[1], 'sex': itm[2], 'dateofbirth': itm[3], 'phone': itm[4],
+                'email': itm[5], 'Address': itm[6], 'photo': itm[7], 'creatdate': itm[8], 'staffname': itm[9]}
         js.append(data)
     return jsonify(js)
 
 
 @app.route('/printcrad_all', methods=['POST'])
 def printcard_all():
-    for itm in requesJson():
-        printDate = itm.get('printDate')
-        total = itm.get('total')
-        Createby = itm.get('Creatby')
-        me = Printcard(printDate, total, Createby)
-        Add(me)
-        return me.printid
+    find = Staff.query.all()
+    return jsonify(addTolist(find))
 
 
-# @app.route('/print_detail_add', methods=['POST'])
-# def print_detail_add():
-#     for itm in requesJson():
-#         printcardid = itm.get('printcardid')
-#         cardid = itm.get('cardid')
-#         ExpireDate = itm.get('ExpireDate')
-#         Autonum = itm.get('Autonum')
-#         bookQty = itm.get('bookQty')
-#         price = itm.get('price')
-#         studenid = itm.get('studenid')
-#         me = Printcard_details(printcardid, cardid, ExpireDate, Autonum, bookQty, price, studenid)
-#         Add(me)
-#         return me.printcardDid
-#
-#
-# @app.route('/book_add', methods=['POST'])
-# def book_add():
-#     # bookname, borrowprice, fineperday, Quantity, Creatby, CreatDate, Author, Catagoryid, photo
-#     for itm in requesJson():
-#         bname = itm.get('name')
-#         borrowprice = itm.get('price')
-#         finepereday = itm.get('fine')
-#         Quantity = itm.get('qty')
-#         Creatby = itm.get('createby')
-#         CreatDate = itm.get('cratedate')
-#         Author = itm.get('author')
-#         Catagoryid = itm.get('catagoryid')
-#         photo = itm.get('photo')
-#         me = Book(bname, borrowprice, finepereday, Quantity, Creatby, CreatDate, Author, Catagoryid, photo)
-#         Add(me)
-#         return me.bookid + 'inserted Success !'
-#
-#
-# @app.route('/catagory_add', methods=['POST'])
-# def catagory_add():
-#     for itm in requesJson():
-#         name = itm.get('name')
-#         me = Catagory(name)
-#         Add(me)
-#         return me.catId + 'inserted Success !'
-#
-#
-# @app.route('/collect_add', methods=['POST'])
-# def collect_add():
-#     for itm in requesJson():
-#         date = itm.get('date')
-#         total = itm.get('total')
-#         fromdate = itm.get('fromdate')
-#         todate = itm.get('todate')
-#         collectby = itm.get('collectby')
-#         me = Collect(date, total, fromdate, todate, collectby)
-#         Add(me)
-#         return me.collectid
-#
-#
-# @app.route('/collect_detail_add', methods=['POST'])
-# def collect_detail_add():
-#     for itm in requesJson():
-#         id = itm.get('id')
-#         subtotal = itm.get('subtotal')
-#         collecttypeid = itm.get('typeid')
-#         me = Collect_details(id, subtotal, collecttypeid)
-#         Add(me)
-#         return me.collectdid
-#
-#
-# @app.route('/collect_type_add', methods=['POST'])
-# def collect_type_add():
-#     for itm in requesJson():
-#         collecttype = itm.get('type')
-#         me = Collecttype(collecttype)
-#         Add(me)
-#         return me.collecttypeid
-#
-#
-# @app.route('/expense_add', methods=['POST'])
-# def expense_add():
-#     for itm in requesJson():
-#         date = itm.get('date')
-#         total = itm.get('total')
-#         createby = itm.get('createby')
-#         me = Expense(date, total, createby)
-#         Add(me)
-#         return me.expenseid
-#
-#
-# @app.route('/expense_detail_add', methods=['POST'])
-# def expense_detail_add():
-#     for itm in requesJson():
-#         id = itm.get('id')
-#         amount = itm.get('amount')
-#         expensetype = itm.get('type')
-#         me = Expense_deltails(id, amount, expensetype)
-#         Add(me)
-#         return me.expenseDid
-#
-#
-# @app.route('/expense_type_add', methods=['POST'])
-# def expense_type_add():
-#     for itm in requesJson():
-#         name = itm.get('name')
-#         me = Expense_type(name)
-#         Add(me)
-#         return me.expenseTid
-#
-#
-# @app.route('/import_add', methods=['POST'])
-# def import_add():
-#     for itm in requesJson():
-#         desc = itm.get('desc')
-#         date = itm.get('date')
-#         total = itm.get('total')
-#         staff = itm.get('staff')
-#         supplier = itm.get('supplier')
-#         me = Import(desc, date, total, staff, supplier)
-#         Add(me)
-#         return me.importid
-#
-#
-# @app.route('/import_detail_add', methods=['POST'])
-# def import_detail_add():
-#     for itm in requesJson():
-#         autonum = itm.get('autonum')
-#         qty = itm.get('qty')
-#         cost = itm.get('cost')
-#         subtotal = itm.get('subtotal')
-#         bookid = itm.get('bookid')
-#         importid = itm.get('importid')
-#         me = Import_details(autonum, qty, cost, subtotal, bookid, importid)
-#         Add(me)
-#         return me.importDid
-#
-#
-# @app.route('/importbook_add', methods=['POST'])
-# def importbook_add():
-#     for itm in requesJson():
-#         importid = itm.get('importid')
-#         barcode = itm.get('barcode')
-#         importDid = itm.get('importDid')
-#         me = Importbook(importid, barcode, importDid)
-#         Add(me)
-#         return me.importbookid
-#
-#
-# @app.route('/supplier_add', methods=['POST'])
-# def supplier_add():
-#     for itm in requesJson():
-#         name = itm.get('name')
-#         phone = itm.get('phone')
-#         email = itm.get('email')
-#         address = itm.get('address')
-#         createdate = itm.get('createdate')
-#         createby = itm.get('createby')
-#         me = Supplier(name, phone, email, address, createdate, createby)
-#         Add(me)
-#         return me.supid
-#
-#
-# @app.route('/stock_add', methods=['POST'])
-# def stock_add():
-#     for itm in requesJson():
-#         detailid = itm.get('detailid')
-#         autonum = itm.get('autonum')
-#         status = itm.get('status')
-#         me = Stock(detailid, autonum, status)
-#         Add(me)
-#         return me.stockid
-#
-#
-# @app.route('/borrow_add', methods=['POST'])
-# def borrow_add():
-#     for itm in requesJson():
-#         date = itm.get('date')
-#         datereturn = itm.get('returndate')
-#         total = itm.get('total')
-#         staffid = itm.get('staffid')
-#         studentid = itm.get('studentid')
-#         cardid = itm.get('cardid')
-#         me = Borrow(date, datereturn, total, staffid, studentid, cardid)
-#         Add(me)
-#         return me.borrowid
-#
-#
-# @app.route('/borrow_detail_add', methods=['POST'])
-# def borrow_detail_add():
-#     for itm in requesJson():
-#         autonum = itm.get('autonum')
-#         bookid = itm.get('bookid')
-#         barcode = itm.get('barcode')
-#         status = itm.get('status')
-#         me = Borrow_details(autonum, bookid, barcode, status)
-#         Add(me)
-#         return me.borrowDId
-#
-#
-# @app.route('/return_add', methods=['POST'])
-# def return_add():
-#     for itm in requesJson():
-#         returndate = itm.get('returndate')
-#         fee = itm.get('fee')
-#         staffid = itm.get('staffid')
-#         studentid = itm.get('studentid')
-#         me = Return(returndate, fee, staffid, studentid)
-#         Add(me)
-#         return me.returnid
-#
-#
-# @app.route('/return_detail_add', methods=['POST'])
-# def return_detail_add():
-#     for itm in requesJson():
-#         id = itm.get('returnid')
-#         bookid = itm.get('bookid')
-#         barcode = itm.get('barcode')
-#         fine = itm.get('fine')
-#         lateday = itm.get('lateday')
-#         borrowid = itm.get('borrowid')
-#         me = Return_details(id, bookid, barcode, fine, lateday, borrowid)
-#         Add(me)
-#         return me.returnDid
+@app.route('/print_detail_all', methods=['POST'])
+def print_detail_all():
+    js = []
+    cur.execute('SELECT * FROM print_details_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'printcard_deatailid': itm[0], 'name': itm[1], 'sex': itm[2], 'dateofbirth': itm[3], 'phone': itm[4],
+                'email': itm[5], 'Address': itm[6], 'photo': itm[7], 'creatdate': itm[8], 'staffname': itm[9]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/book_all', methods=['POST'])
+def book_all():
+    js = []
+    cur.execute('SELECT * FROM book_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'bookid': itm[0], 'bookname': itm[1], 'borrowprice': itm[2], 'fineperday': itm[3], 'quantity': itm[4],
+                'createdate': itm[5], 'AuthorName': itm[6], 'Nae': itm[7], 'Catagname': itm[8]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/catagory_all', methods=['POST'])
+def catagory_all():
+    find = Catagory.query.all()
+    return jsonify(addTolist(find))
+
+
+@app.route('/collect_all', methods=['POST'])
+def collect_all():
+    js = []
+    cur.execute('SELECT * FROM collect_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'bookid': itm[0], 'bookname': itm[1], 'borrowprice': itm[2], 'fineperday': itm[3],
+                'quantity': itm[4],
+                'createdate': itm[5], 'AuthorName': itm[6], 'Nae': itm[7], 'Catagname': itm[8]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/collect_detail_all', methods=['POST'])
+def collect_detail_all():
+    js = []
+    cur.execute('SELECT * FROM collect_details_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'Collect_detailid': itm[0], 'collectid': itm[1], 'subtotal': itm[2], 'collecttype': itm[3]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/collect_type_all', methods=['POST'])
+def collect_type_all():
+    find = Collecttype.query.all();
+    return jsonify(addTolist(find))
+
+
+@app.route('/expense_all', methods=['POST'])
+def expense_all():
+    js = []
+    cur.execute('SELECT * FROM expense_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'expenseid': itm[0], 'expesedate': itm[1], 'total': itm[2], 'createby': itm[3]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/expense_detail_all', methods=['POST'])
+def expense_detail_all():
+    js = []
+    cur.execute('SELECT * FROM expense_details_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'expense_detailid': itm[0], 'expenseid': itm[1], 'amount': itm[2], 'expensetype': itm[3]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/expense_type_all', methods=['POST'])
+def expense_type_all():
+    find = Expense_type.query.all()
+    return jsonify(addTolist(find))
+
+
+@app.route('/import_all', methods=['POST'])
+def import_all():
+    js = []
+    cur.execute('SELECT * FROM import_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'importid': itm[0], 'desc': itm[1], 'importdate': itm[2], 'total': itm[3], 'Cretbay': itm[4],
+                'Suplliername': itm[5]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/import_detail_all', methods=['POST'])
+def import_detail_all():
+    js = []
+    cur.execute('SELECT * FROM import_details_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'import_detailid': itm[0], 'Autonum': itm[1], 'quantity': itm[2], 'cost': itm[3], 'subtotal': itm[4],
+                'bookname': itm[5], 'importid': itm[6]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/importbook_all', methods=['POST'])
+def importbook_all():
+    js = []
+    cur.execute('SELECT * FROM importbook_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'import_bookid': itm[0], 'importid': itm[1], 'barcode': itm[2], 'import_detailid': itm[3],
+                'bookname': itm[4]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/supplier_all', methods=['POST'])
+def supplier_all():
+    js = []
+    cur.execute('SELECT * FROM supplier_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'supplierid': itm[0], 'SupllierName': itm[1], 'phone': itm[2], 'email': itm[3],
+                'Adress': itm[4], 'CreateDate': itm[5], 'Createby': itm[6]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/stock_all', methods=['POST'])
+def stock_all():
+    js = []
+    cur.execute('SELECT * FROM stock_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'stockid': itm[0], 'import_detailid': itm[1], 'bookname': itm[2], 'autonum': itm[3],
+                'Quantity': itm[4], 'borrowprice': itm[5], 'fineperday': itm[6], 'photo': itm[7], 'status': itm[8]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/borrow_all', methods=['POST'])
+def borrow_all():
+    js = []
+    cur.execute('SELECT * FROM borrow_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'borrowid': itm[0], 'borrowdate': itm[1], 'datereturn': itm[2], 'total': itm[3],
+                'staffname': itm[4], 'studentname': itm[5], 'cardid': itm[6]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/borrow_detail_all', methods=['POST'])
+def borrow_detail_all():
+    js = []
+    cur.execute('SELECT * FROM borrow_details_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'borrow_detailid': itm[0], 'borrowdate': itm[1], 'Autonum': itm[2], 'bookname': itm[3],
+                'barcode': itm[4], 'status': itm[5]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/return_all', methods=['POST'])
+def return_all():
+    js = []
+    cur.execute('SELECT * FROM return_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'returnid': itm[0], 'returndate': itm[1], 'fee': itm[2], 'staffname': itm[3],
+                'studentname': itm[4]}
+        js.append(data)
+    return jsonify(js)
+
+
+@app.route('/return_detail_all', methods=['POST'])
+def return_detail_all():
+    js = []
+    cur.execute('SELECT * FROM return_all')
+    result = cur.fetchall()
+    for itm in result:
+        data = {'return_detailid': itm[0], 'returnid': itm[1], 'booname': itm[2], 'barcode': itm[3],
+                'fine': itm[4], 'lateday': itm[5], 'borrowid': itm[6]}
+        js.append(data)
+    return jsonify(js)
+
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------Delete---------------------------------------------------------------
+
+
+def delete(obj):
+    db.session.delete(obj)
+    db.session.commit()
+
+
+def getDataFromjson(jsonData, Table):
+    for itm in jsonData:
+        id = itm.get('id')
+        query = Table.query.get(id)
+        delete(query)
+
+
+@app.route('/staff_delete', methods=['POST'])
+def staff_delete():
+    getDataFromjson(requesJson(), Staff)
+    return staff_all()
+
+
+@app.route('/user_delete', methods=['POST'])
+def user_delete():
+    getDataFromjson(requesJson(), User)
+    return user_all()
+
+
+@app.route('/role_delete', methods=['POST'])
+def role_delete():
+    getDataFromjson(requesJson(), Role)
+    return role_all()
+
+
+@app.route('/privillage_delete', methods=['POST'])
+def privillage_delete():
+    getDataFromjson(requesJson(), Privillage)
+    return privillage_all()
+
+
+@app.route('/student_delete', methods=['POST'])
+def student_delete():
+    getDataFromjson(requesJson(), Student)
+    return student_all()
+
+
+@app.route('/printcrad_delete', methods=['POST'])
+def printcard_delete():
+    getDataFromjson(requesJson(), Printcard)
+    return printcard_all()
+
+
+@app.route('/print_detail_delete', methods=['POST'])
+def print_detail_delete():
+    getDataFromjson(requesJson(), Printcard_details)
+    return print_detail_all
+
+
+@app.route('/book_delete', methods=['POST'])
+def book_delete():
+    getDataFromjson(requesJson(), Book)
+    return book_all()
+
+
+@app.route('/catagory_delete', methods=['POST'])
+def catagory_delete():
+    getDataFromjson(requesJson(), Catagory)
+    return catagory_all()
+
+
+@app.route('/collect_delete', methods=['POST'])
+def collect_delete():
+    getDataFromjson(requesJson(), Collect)
+    return collect_all()
+
+
+@app.route('/collect_detail_delete', methods=['POST'])
+def collect_detail_delete():
+    getDataFromjson(requesJson(), Collect_details)
+    return collect_detail_all()
+
+
+@app.route('/collect_type_delete', methods=['POST'])
+def collect_type_delete():
+    getDataFromjson(requesJson(), Collecttype)
+    return collect_type_all()
+
+
+@app.route('/expense_delete', methods=['POST'])
+def expense_delete():
+    getDataFromjson(requesJson(), Expense)
+    return expense_all()
+
+
+@app.route('/expense_detail_delete', methods=['POST'])
+def expense_detail_delete():
+    getDataFromjson(requesJson(), Expense_deltails)
+    return expense_detail_all()
+
+
+@app.route('/expense_type_delete', methods=['POST'])
+def expense_type_delete():
+    getDataFromjson(requesJson(), Expense_type)
+    return expense_type_all()
+
+
+@app.route('/import_delete', methods=['POST'])
+def import_delete():
+    getDataFromjson(requesJson(), Import)
+    return import_all()
+
+
+@app.route('/import_detail_delete', methods=['POST'])
+def import_detail_delete():
+    getDataFromjson(requesJson(), Import_details)
+    return import_detail_all()
+
+
+@app.route('/importbook_delete', methods=['POST'])
+def importbook_delete():
+    getDataFromjson(requesJson(), Importbook)
+    return importbook_all()
+
+
+@app.route('/supplier_delete', methods=['POST'])
+def supplier_delete():
+    getDataFromjson(requesJson(), Supplier)
+    return supplier_all()
+
+
+@app.route('/stock_delete', methods=['POST'])
+def stock_delete():
+    getDataFromjson(requesJson(), Stock)
+    return stock_all()
+
+
+@app.route('/borrow_delete', methods=['POST'])
+def borrow_delete():
+    getDataFromjson(requesJson(), Borrow)
+    return borrow_all()
+
+
+@app.route('/borrow_detail_delete', methods=['POST'])
+def borrow_detail_delete():
+    getDataFromjson(requesJson(), Borrow_details)
+    return borrow_detail_all()
+
+
+@app.route('/return_delete', methods=['POST'])
+def return_delete():
+    getDataFromjson(requesJson(), Return)
+    return return_all
+
+
+@app.route('/return_detail_delete', methods=['POST'])
+def return_detail_deete():
+    getDataFromjson(requesJson(), Return_details)
+    return return_detail_all()
+
 
 if __name__ == "__main__":
     app.run()
