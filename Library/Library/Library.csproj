@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -123,6 +127,8 @@
     <Compile Include="category.Designer.cs">
       <DependentUpon>category.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\User.cs" />
+    <Compile Include="WebAPI\buildURL.cs" />
     <Compile Include="Class\encapulation.cs" />
     <Compile Include="Class\mdi.cs" />
     <Compile Include="Collage.cs">
@@ -283,6 +289,17 @@
     <Compile Include="BorrowBook.Designer.cs">
       <DependentUpon>BorrowBook.cs</DependentUpon>
     </Compile>
+    <Compile Include="WebAPI\convertimage.cs" />
+    <Compile Include="WebAPI\ExpireAndpenalty.cs" />
+    <Compile Include="WebAPI\IUnwrappable.cs" />
+    <Compile Include="WebAPI\IWrappable.cs" />
+    <Compile Include="WebAPI\JSONWrapper.cs" />
+    <Compile Include="WebAPI\loginclass.cs" />
+    <Compile Include="WebAPI\RequestHepler.cs" />
+    <Compile Include="WebAPI\studentdata.cs" />
+    <Compile Include="WebAPI\UnwrapData.cs" />
+    <Compile Include="WebAPI\UnwrapRows.cs" />
+    <Compile Include="WebAPI\WebConnection.cs" />
     <EmbeddedResource Include="addbook.resx">
       <DependentUpon>addbook.cs</DependentUpon>
     </EmbeddedResource>
@@ -410,6 +427,7 @@
     <EmbeddedResource Include="BorrowBook.resx">
       <DependentUpon>BorrowBook.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -428,6 +446,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="img\report.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="img\Book\" />
+    <Folder Include="img\Staff\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="img\Student\screen.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

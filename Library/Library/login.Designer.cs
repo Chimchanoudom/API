@@ -35,9 +35,9 @@
             this.button1 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.button3 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.btnshow = new System.Windows.Forms.Button();
+            this.txtpasswd = new System.Windows.Forms.TextBox();
+            this.txtuser = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
@@ -119,7 +119,7 @@
             this.panel2.BackColor = System.Drawing.Color.Gray;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel2.Controls.Add(this.panel4);
-            this.panel2.Controls.Add(this.textBox1);
+            this.panel2.Controls.Add(this.txtuser);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -131,42 +131,42 @@
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.button3);
-            this.panel4.Controls.Add(this.textBox2);
+            this.panel4.Controls.Add(this.btnshow);
+            this.panel4.Controls.Add(this.txtpasswd);
             this.panel4.Location = new System.Drawing.Point(117, 57);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(315, 31);
             this.panel4.TabIndex = 2;
             // 
-            // button3
+            // btnshow
             // 
-            this.button3.BackColor = System.Drawing.SystemColors.Control;
-            this.button3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button3.Location = new System.Drawing.Point(221, 0);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(94, 31);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Show";
-            this.button3.UseVisualStyleBackColor = false;
+            this.btnshow.BackColor = System.Drawing.SystemColors.Control;
+            this.btnshow.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnshow.Location = new System.Drawing.Point(221, 0);
+            this.btnshow.Name = "btnshow";
+            this.btnshow.Size = new System.Drawing.Size(94, 31);
+            this.btnshow.TabIndex = 3;
+            this.btnshow.Text = "Show";
+            this.btnshow.UseVisualStyleBackColor = false;
+            this.btnshow.Click += new System.EventHandler(this.btnshow_Click);
             // 
-            // textBox2
+            // txtpasswd
             // 
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.textBox2.Font = new System.Drawing.Font("Palatino Linotype", 17F);
-            this.textBox2.Location = new System.Drawing.Point(0, 0);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.PasswordChar = '*';
-            this.textBox2.Size = new System.Drawing.Size(221, 31);
-            this.textBox2.TabIndex = 2;
+            this.txtpasswd.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtpasswd.Dock = System.Windows.Forms.DockStyle.Left;
+            this.txtpasswd.Font = new System.Drawing.Font("Palatino Linotype", 17F);
+            this.txtpasswd.Location = new System.Drawing.Point(0, 0);
+            this.txtpasswd.Name = "txtpasswd";
+            this.txtpasswd.Size = new System.Drawing.Size(221, 31);
+            this.txtpasswd.TabIndex = 2;
             // 
-            // textBox1
+            // txtuser
             // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(117, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(315, 26);
-            this.textBox1.TabIndex = 1;
+            this.txtuser.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtuser.Location = new System.Drawing.Point(117, 12);
+            this.txtuser.Name = "txtuser";
+            this.txtuser.Size = new System.Drawing.Size(315, 26);
+            this.txtuser.TabIndex = 1;
             // 
             // label3
             // 
@@ -221,13 +221,13 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtuser;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button btnshow;
+        private System.Windows.Forms.TextBox txtpasswd;
     }
 }

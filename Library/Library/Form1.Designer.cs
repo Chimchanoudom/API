@@ -63,7 +63,7 @@
             this.ចណយលករទញសវភToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ចណយផសងៗToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lbluser = new System.Windows.Forms.Label();
             this.lbldate = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
@@ -410,7 +410,7 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.Black;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.lbluser);
             this.panel1.Controls.Add(this.lbldate);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 593);
@@ -419,17 +419,17 @@
             this.panel1.Size = new System.Drawing.Size(1230, 49);
             this.panel1.TabIndex = 1;
             // 
-            // label3
+            // lbluser
             // 
-            this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Black;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.label3.Location = new System.Drawing.Point(0, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(139, 27);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "អ្នកប្រើប្រាស់ / User  :";
+            this.lbluser.AutoSize = true;
+            this.lbluser.BackColor = System.Drawing.Color.Black;
+            this.lbluser.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lbluser.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.lbluser.Location = new System.Drawing.Point(0, 0);
+            this.lbluser.Name = "lbluser";
+            this.lbluser.Size = new System.Drawing.Size(139, 27);
+            this.lbluser.TabIndex = 5;
+            this.lbluser.Text = "អ្នកប្រើប្រាស់ / User  :";
             // 
             // lbldate
             // 
@@ -494,7 +494,7 @@
         private System.Windows.Forms.ToolStripMenuItem btnexpense;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lbldate;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lbluser;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolStripMenuItem btnprevilageanduser;
         private System.Windows.Forms.ToolStripMenuItem btnexpensetype;

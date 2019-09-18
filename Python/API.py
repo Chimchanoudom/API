@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy_session import flask_scoped_session
-from sqlalchemy import MetaData, create_engine
+from sqlalchemy import MetaData, create_engine,and_,or_,not_
 from sqlalchemy.orm import sessionmaker
 from flask_sqlalchemy import SQLAlchemy, inspect
 import psycopg2
+from datetime import  datetime
 
 app = Flask(__name__)
 con = psycopg2.connect(database='API', user='postgres', password='root', host='localhost', port='5432')
@@ -37,11 +38,11 @@ class Book(db.Model):
     quantity = db.Column(db.Integer)
     Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
-    CreatDate = db.Column(db.DateTime)
+    CreatDate = db.Column(db.Date)
     Author = db.Column(db.String(255))
     Categoryid = db.Column(db.Integer, db.ForeignKey('catagory.catId', onupdate='CASCADE', ondelete='CASCADE'),
                            nullable=False)
-    photo = db.Column(db.LargeBinary)
+    photo = db.Column(db.String(255))
     borrow = db.relationship('Borrow_details', backref='book', lazy=True)
     Returnbook = db.relationship('Return_details', backref='book', lazy=True)
     iportdetail = db.relationship('Import_details', backref='book', lazy=True)
@@ -77,8 +78,8 @@ class Borrow_details(db.Model):
 
 class Borrow(db.Model):
     borrowid = db.Column(db.Integer, primary_key=True)
-    borrowDate = db.Column(db.DateTime)
-    dateReturn = db.Column(db.DateTime)
+    borrowDate = db.Column(db.Date)
+    dateReturn = db.Column(db.Date)
     total = db.Column(db.Float)
     staffid = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
@@ -96,7 +97,7 @@ class Borrow(db.Model):
 
 class Return(db.Model):
     returnid = db.Column(db.Integer, primary_key=True)
-    returnDate = db.Column(db.DateTime)
+    returnDate = db.Column(db.Date)
     fee = db.Column(db.Float)
     staffid = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
@@ -135,12 +136,12 @@ class Student(db.Model):
     studentid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     sex = db.Column(db.String(10))
-    DateOfbirth = db.Column(db.DateTime)
+    DateOfbirth = db.Column(db.Date)
     phone = db.Column(db.String(255))
     email = db.Column(db.String(255))
     Address = db.Column(db.String(255))
-    photo = db.Column(db.LargeBinary)
-    CreatDate = db.Column(db.DateTime)
+    photo = db.Column(db.String(255))
+    CreatDate = db.Column(db.Date)
     Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
     printcard = db.relationship('Printcard_details', backref='student', lazy=True)
@@ -159,7 +160,7 @@ class Student(db.Model):
 
 class Printcard(db.Model):
     printid = db.Column(db.Integer, primary_key=True)
-    printDate = db.Column(db.DateTime)
+    printDate = db.Column(db.Date)
     total = db.Column(db.Integer)
     Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
@@ -176,7 +177,7 @@ class Printcard_details(db.Model):
     printcardid = db.Column(db.Integer, db.ForeignKey('printcard.printid', onupdate='CASCADE', ondelete='CASCADE'),
                             nullable=False)
     cardid = db.Column(db.String(255))
-    ExpireDate = db.Column(db.DateTime)
+    ExpireDate = db.Column(db.Date)
     AutoNum = db.Column(db.Integer)
     bookQuantity = db.Column(db.Integer)
     price = db.Column(db.Float)
@@ -197,11 +198,11 @@ class Staff(db.Model):
     staffid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     sex = db.Column(db.String(10))
-    DateOfbirth = db.Column(db.DateTime)
+    DateOfbirth = db.Column(db.Date)
     phone = db.Column(db.String(255))
     email = db.Column(db.String(255))
     Address = db.Column(db.String(255))
-    photo = db.Column(db.LargeBinary)
+    photo = db.Column(db.String(255))
     book = db.relationship('Book', backref='staff', lazy=True)
     printcard = db.relationship('Printcard', backref='staff', lazy=True)
     student = db.relationship('Student', backref='staff', lazy=True)
@@ -229,7 +230,7 @@ class Supplier(db.Model):
     phone = db.Column(db.String(255))
     email = db.Column(db.String(255))
     Address = db.Column(db.String(255))
-    CreatDate = db.Column(db.DateTime)
+    CreatDate = db.Column(db.Date)
     Creatby = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
     importbook = db.relationship('Import', backref='supplier', lazy=True)
@@ -246,7 +247,7 @@ class Supplier(db.Model):
 class Import(db.Model):
     importid = db.Column(db.Integer, primary_key=True)
     desciption = db.Column(db.String(255))
-    importDate = db.Column(db.DateTime)
+    importDate = db.Column(db.Date)
     total = db.Column(db.Float)
     CreatBy = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                         nullable=False)
@@ -317,7 +318,7 @@ class Stock(db.Model):
 
 class Expense(db.Model):
     expenseid = db.Column(db.Integer, primary_key=True)
-    expenseDate = db.Column(db.DateTime)
+    expenseDate = db.Column(db.Date)
     total = db.Column(db.Float)
     CreateBy = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                          nullable=False)
@@ -419,10 +420,10 @@ class Collect_details(db.Model):
 
 class Collect(db.Model):
     collectid = db.Column(db.Integer, primary_key=True)
-    collectDate = db.Column(db.DateTime)
+    collectDate = db.Column(db.Date)
     total = db.Column(db.Float)
-    fromDate = db.Column(db.DateTime)
-    todate = db.Column(db.DateTime)
+    fromDate = db.Column(db.Date)
+    todate = db.Column(db.Date)
     Collectby = db.Column(db.Integer, db.ForeignKey('staff.staffid', onupdate='CASCADE', ondelete='CASCADE'),
                           nullable=False)
     collectDetails = db.relationship('Collect_details', backref='collect', lazy=True)
@@ -461,7 +462,7 @@ def staff_add():
         photo = itm.get('photo')
         me = Staff(name, sex, dob, phone, email, address, photo)
         Add(me)
-        return me.staffid + 'inserted Success !'
+        return staff_all()
 
 
 @app.route('/user_add', methods=['POST'])
@@ -475,7 +476,7 @@ def user_add():
         roleid = itm.get('roleid')
         me = User(name, passwd, is_active, staffid, roleid)
         Add(me)
-        return me.userid + 'inserted success !'
+        return user_all()
 
 
 @app.route('/role_add', methods=['POST'])
@@ -485,34 +486,33 @@ def role_add():
         privillageid = itm.get('privillageid')
         me = Role(name, privillageid)
         Add(me)
-        return me.roleid + 'inserted Success !'
+        return role_all()
 
 
 @app.route('/privillage_add', methods=['POST'])
 def privillage_add():
     for itm in requesJson():
-        name = itm.get('name')
+        name =requesJson()['name']
         me = Privillage(name)
         Add(me)
-        return me.privillageid + 'inserted Success !'
+        return privillage_all()
 
 
 @app.route('/student_add', methods=['POST'])
 def student_add():
     #     name, sex, dob, phone, email, address, photo, creatDate, CreatBy
-    for itm in requesJson():
-        name = itm.get('name')
-        sex = itm.get('sex')
-        dob = itm.get('dob')
-        phone = itm.get('phone')
-        email = itm.get('email')
-        address = itm.get('address')
-        photo = itm.get('photo')
-        createDate = itm.get('createDate')
-        Createby = itm.get('createBy')
+        name = requesJson()['name']
+        sex = requesJson()['sex']
+        dob = requesJson()['dob']
+        phone = requesJson()['phone']
+        email = requesJson()['email']
+        address = requesJson()['address']
+        photo =requesJson()['photo']
+        createDate = requesJson()['createDate']
+        Createby = requesJson()['createBy']
         me = Student(name, sex, dob, phone, email, address, photo, createDate, Createby)
         Add(me)
-        return me.studentid + 'inserted Success !'
+        return student_all()
 
 
 @app.route('/printcrad_add', methods=['POST'])
@@ -523,7 +523,7 @@ def printcard_add():
         Createby = itm.get('Creatby')
         me = Printcard(printDate, total, Createby)
         Add(me)
-        return me.printid
+        return printcard_all()
 
 
 @app.route('/print_detail_add', methods=['POST'])
@@ -538,7 +538,7 @@ def print_detail_add():
         studenid = itm.get('studenid')
         me = Printcard_details(printcardid, cardid, ExpireDate, Autonum, bookQty, price, studenid)
         Add(me)
-        return me.printcardDid
+        return print_detail_all()
 
 
 @app.route('/book_add', methods=['POST'])
@@ -556,7 +556,7 @@ def book_add():
         photo = itm.get('photo')
         me = Book(bname, borrowprice, finepereday, Quantity, Creatby, CreatDate, Author, Catagoryid, photo)
         Add(me)
-        return me.bookid + 'inserted Success !'
+        return book_all()
 
 
 @app.route('/catagory_add', methods=['POST'])
@@ -565,7 +565,7 @@ def catagory_add():
         name = itm.get('name')
         me = Catagory(name)
         Add(me)
-        return me.catId + 'inserted Success !'
+        return catagory_all()
 
 
 @app.route('/collect_add', methods=['POST'])
@@ -578,7 +578,7 @@ def collect_add():
         collectby = itm.get('collectby')
         me = Collect(date, total, fromdate, todate, collectby)
         Add(me)
-        return me.collectid
+        return collect_all()
 
 
 @app.route('/collect_detail_add', methods=['POST'])
@@ -589,7 +589,7 @@ def collect_detail_add():
         collecttypeid = itm.get('typeid')
         me = Collect_details(id, subtotal, collecttypeid)
         Add(me)
-        return me.collectdid
+        return collect_detail_all()
 
 
 @app.route('/collect_type_add', methods=['POST'])
@@ -598,7 +598,7 @@ def collect_type_add():
         collecttype = itm.get('type')
         me = Collecttype(collecttype)
         Add(me)
-        return me.collecttypeid
+        return collect_type_all()
 
 
 @app.route('/expense_add', methods=['POST'])
@@ -609,7 +609,7 @@ def expense_add():
         createby = itm.get('createby')
         me = Expense(date, total, createby)
         Add(me)
-        return me.expenseid
+        return expense_all()
 
 
 @app.route('/expense_detail_add', methods=['POST'])
@@ -620,7 +620,7 @@ def expense_detail_add():
         expensetype = itm.get('type')
         me = Expense_deltails(id, amount, expensetype)
         Add(me)
-        return me.expenseDid
+        return expense_detail_all()
 
 
 @app.route('/expense_type_add', methods=['POST'])
@@ -629,7 +629,7 @@ def expense_type_add():
         name = itm.get('name')
         me = Expense_type(name)
         Add(me)
-        return me.expenseTid
+        return expense_type_all()
 
 
 @app.route('/import_add', methods=['POST'])
@@ -642,7 +642,7 @@ def import_add():
         supplier = itm.get('supplier')
         me = Import(desc, date, total, staff, supplier)
         Add(me)
-        return me.importid
+        return import_all()
 
 
 @app.route('/import_detail_add', methods=['POST'])
@@ -656,7 +656,7 @@ def import_detail_add():
         importid = itm.get('importid')
         me = Import_details(autonum, qty, cost, subtotal, bookid, importid)
         Add(me)
-        return me.importDid
+        return import_detail_all()
 
 
 @app.route('/importbook_add', methods=['POST'])
@@ -667,7 +667,7 @@ def importbook_add():
         importDid = itm.get('importDid')
         me = Importbook(importid, barcode, importDid)
         Add(me)
-        return me.importbookid
+        return importbook_all()
 
 
 @app.route('/supplier_add', methods=['POST'])
@@ -681,7 +681,7 @@ def supplier_add():
         createby = itm.get('createby')
         me = Supplier(name, phone, email, address, createdate, createby)
         Add(me)
-        return me.supid
+        return supplier_all()
 
 
 @app.route('/stock_add', methods=['POST'])
@@ -692,7 +692,7 @@ def stock_add():
         status = itm.get('status')
         me = Stock(detailid, autonum, status)
         Add(me)
-        return me.stockid
+        return stock_all()
 
 
 @app.route('/borrow_add', methods=['POST'])
@@ -706,7 +706,7 @@ def borrow_add():
         cardid = itm.get('cardid')
         me = Borrow(date, datereturn, total, staffid, studentid, cardid)
         Add(me)
-        return me.borrowid
+        return borrow_all()
 
 
 @app.route('/borrow_detail_add', methods=['POST'])
@@ -718,7 +718,7 @@ def borrow_detail_add():
         status = itm.get('status')
         me = Borrow_details(autonum, bookid, barcode, status)
         Add(me)
-        return me.borrowDId
+        return borrow_detail_all();
 
 
 @app.route('/return_add', methods=['POST'])
@@ -730,7 +730,7 @@ def return_add():
         studentid = itm.get('studentid')
         me = Return(returndate, fee, staffid, studentid)
         Add(me)
-        return me.returnid
+        return return_add()
 
 
 @app.route('/return_detail_add', methods=['POST'])
@@ -744,7 +744,7 @@ def return_detail_add():
         borrowid = itm.get('borrowid')
         me = Return_details(id, bookid, barcode, fine, lateday, borrowid)
         Add(me)
-        return me.returnDid
+        return return_detail_all
 
 
 # ----------------------------------------------------------------------------------------------------------------------------------
@@ -805,8 +805,8 @@ def student_all():
     cur.execute('SELECT * FROM student_all')
     result = cur.fetchall()
     for itm in result:
-        data = {'studentid': itm[0], 'name': itm[1], 'sex': itm[2], 'dateofbirth': itm[3], 'phone': itm[4],
-                'email': itm[5], 'Address': itm[6], 'photo': itm[7], 'creatdate': itm[8], 'staffname': itm[9]}
+        data = {'studentid': itm[0], 'name': itm[1], 'sex': itm[2], 'dateofbirth': itm[3].strftime('%D %d/%B/%Y').split(' ')[1], 'phone': itm[4],
+                'email': itm[5], 'Address': itm[6], 'photo': itm[7], 'creatdate': itm[8].strftime('%D %d/%B/%Y').split(' ')[1], 'staffname': itm[9]}
         js.append(data)
     return jsonify(js)
 
@@ -1022,7 +1022,7 @@ def delete(obj):
     db.session.commit()
 
 
-def getDataFromjson(jsonData, Table):
+def getDataDelete(jsonData, Table):
     for itm in jsonData:
         id = itm.get('id')
         query = Table.query.get(id)
@@ -1031,147 +1031,460 @@ def getDataFromjson(jsonData, Table):
 
 @app.route('/staff_delete', methods=['POST'])
 def staff_delete():
-    getDataFromjson(requesJson(), Staff)
+    getDataDelete(requesJson(), Staff)
     return staff_all()
 
 
 @app.route('/user_delete', methods=['POST'])
 def user_delete():
-    getDataFromjson(requesJson(), User)
+    getDataDelete(requesJson(), User)
     return user_all()
 
 
 @app.route('/role_delete', methods=['POST'])
 def role_delete():
-    getDataFromjson(requesJson(), Role)
+    getDataDelete(requesJson(), Role)
     return role_all()
 
 
 @app.route('/privillage_delete', methods=['POST'])
 def privillage_delete():
-    getDataFromjson(requesJson(), Privillage)
+    getDataDelete(requesJson(), Privillage)
     return privillage_all()
 
 
 @app.route('/student_delete', methods=['POST'])
 def student_delete():
-    getDataFromjson(requesJson(), Student)
+    getDataDelete(requesJson(), Student)
     return student_all()
 
 
 @app.route('/printcrad_delete', methods=['POST'])
 def printcard_delete():
-    getDataFromjson(requesJson(), Printcard)
+    getDataDelete(requesJson(), Printcard)
     return printcard_all()
 
 
 @app.route('/print_detail_delete', methods=['POST'])
 def print_detail_delete():
-    getDataFromjson(requesJson(), Printcard_details)
+    getDataDelete(requesJson(), Printcard_details)
     return print_detail_all
 
 
 @app.route('/book_delete', methods=['POST'])
 def book_delete():
-    getDataFromjson(requesJson(), Book)
+    getDataDelete(requesJson(), Book)
     return book_all()
 
 
 @app.route('/catagory_delete', methods=['POST'])
 def catagory_delete():
-    getDataFromjson(requesJson(), Catagory)
+    getDataDelete(requesJson(), Catagory)
     return catagory_all()
 
 
 @app.route('/collect_delete', methods=['POST'])
 def collect_delete():
-    getDataFromjson(requesJson(), Collect)
+    getDataDelete(requesJson(), Collect)
     return collect_all()
 
 
 @app.route('/collect_detail_delete', methods=['POST'])
 def collect_detail_delete():
-    getDataFromjson(requesJson(), Collect_details)
+    getDataDelete(requesJson(), Collect_details)
     return collect_detail_all()
 
 
 @app.route('/collect_type_delete', methods=['POST'])
 def collect_type_delete():
-    getDataFromjson(requesJson(), Collecttype)
+    getDataDelete(requesJson(), Collecttype)
     return collect_type_all()
 
 
 @app.route('/expense_delete', methods=['POST'])
 def expense_delete():
-    getDataFromjson(requesJson(), Expense)
+    getDataDelete(requesJson(), Expense)
     return expense_all()
 
 
 @app.route('/expense_detail_delete', methods=['POST'])
 def expense_detail_delete():
-    getDataFromjson(requesJson(), Expense_deltails)
+    getDataDelete(requesJson(), Expense_deltails)
     return expense_detail_all()
 
 
 @app.route('/expense_type_delete', methods=['POST'])
 def expense_type_delete():
-    getDataFromjson(requesJson(), Expense_type)
+    getDataDelete(requesJson(), Expense_type)
     return expense_type_all()
 
 
 @app.route('/import_delete', methods=['POST'])
 def import_delete():
-    getDataFromjson(requesJson(), Import)
+    getDataDelete(requesJson(), Import)
     return import_all()
 
 
 @app.route('/import_detail_delete', methods=['POST'])
 def import_detail_delete():
-    getDataFromjson(requesJson(), Import_details)
+    getDataDelete(requesJson(), Import_details)
     return import_detail_all()
 
 
 @app.route('/importbook_delete', methods=['POST'])
 def importbook_delete():
-    getDataFromjson(requesJson(), Importbook)
+    getDataDelete(requesJson(), Importbook)
     return importbook_all()
 
 
 @app.route('/supplier_delete', methods=['POST'])
 def supplier_delete():
-    getDataFromjson(requesJson(), Supplier)
+    getDataDelete(requesJson(), Supplier)
     return supplier_all()
 
 
 @app.route('/stock_delete', methods=['POST'])
 def stock_delete():
-    getDataFromjson(requesJson(), Stock)
+    getDataDelete(requesJson(), Stock)
     return stock_all()
 
 
 @app.route('/borrow_delete', methods=['POST'])
 def borrow_delete():
-    getDataFromjson(requesJson(), Borrow)
+    getDataDelete(requesJson(), Borrow)
     return borrow_all()
 
 
 @app.route('/borrow_detail_delete', methods=['POST'])
 def borrow_detail_delete():
-    getDataFromjson(requesJson(), Borrow_details)
+    getDataDelete(requesJson(), Borrow_details)
     return borrow_detail_all()
 
 
 @app.route('/return_delete', methods=['POST'])
 def return_delete():
-    getDataFromjson(requesJson(), Return)
+    getDataDelete(requesJson(), Return)
     return return_all
 
 
 @app.route('/return_detail_delete', methods=['POST'])
 def return_detail_deete():
-    getDataFromjson(requesJson(), Return_details)
+    getDataDelete(requesJson(), Return_details)
     return return_detail_all()
 
+# ----------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------Update---------------------------------------------------------------
+#
+# def update():
+#     db.session.commit()
+#
+#
+# @app.route('/staff_update', methods=['POST'])
+# def staff_update():
+#     # name, sex, dob, phone, email, address, photo
+#     id=requesJson()['id']
+#
+#
+#
+#
+# @app.route('/user_add', methods=['POST'])
+# def user_add():
+#     # name, passwd, is_active, staffid, roleid
+#     for itm in requesJson():
+#         name = itm.get('name')
+#         passwd = itm.get('passwd')
+#         is_active = itm.get('active')
+#         staffid = itm.get('staffid')
+#         roleid = itm.get('roleid')
+#         me = User(name, passwd, is_active, staffid, roleid)
+#         Add(me)
+#         return me.userid + 'inserted success !'
+#
+#
+# @app.route('/role_add', methods=['POST'])
+# def role_add():
+#     for itm in requesJson():
+#         name = itm.get('name')
+#         privillageid = itm.get('privillageid')
+#         me = Role(name, privillageid)
+#         Add(me)
+#         return me.roleid + 'inserted Success !'
+#
+#
+# @app.route('/privillage_add', methods=['POST'])
+# def privillage_add():
+#     for itm in requesJson():
+#         name = itm.get('name')
+#         me = Privillage(name)
+#         Add(me)
+#         return me.privillageid + 'inserted Success !'
+#
+#
+# @app.route('/student_add', methods=['POST'])
+# def student_add():
+#     #     name, sex, dob, phone, email, address, photo, creatDate, CreatBy
+#     for itm in requesJson():
+#         name = itm.get('name')
+#         sex = itm.get('sex')
+#         dob = itm.get('dob')
+#         phone = itm.get('phone')
+#         email = itm.get('email')
+#         address = itm.get('address')
+#         photo = itm.get('photo')
+#         createDate = itm.get('createDate')
+#         Createby = itm.get('createBy')
+#         me = Student(name, sex, dob, phone, email, address, photo, createDate, Createby)
+#         Add(me)
+#         return me.studentid + 'inserted Success !'
+#
+#
+# @app.route('/printcrad_add', methods=['POST'])
+# def printcard_add():
+#     for itm in requesJson():
+#         printDate = itm.get('printDate')
+#         total = itm.get('total')
+#         Createby = itm.get('Creatby')
+#         me = Printcard(printDate, total, Createby)
+#         Add(me)
+#         return me.printid
+#
+#
+# @app.route('/print_detail_add', methods=['POST'])
+# def print_detail_add():
+#     for itm in requesJson():
+#         printcardid = itm.get('printcardid')
+#         cardid = itm.get('cardid')
+#         ExpireDate = itm.get('ExpireDate')
+#         Autonum = itm.get('Autonum')
+#         bookQty = itm.get('bookQty')
+#         price = itm.get('price')
+#         studenid = itm.get('studenid')
+#         me = Printcard_details(printcardid, cardid, ExpireDate, Autonum, bookQty, price, studenid)
+#         Add(me)
+#         return me.printcardDid
+#
+#
+# @app.route('/book_add', methods=['POST'])
+# def book_add():
+#     # bookname, borrowprice, fineperday, Quantity, Creatby, CreatDate, Author, Catagoryid, photo
+#     for itm in requesJson():
+#         bname = itm.get('name')
+#         borrowprice = itm.get('price')
+#         finepereday = itm.get('fine')
+#         Quantity = itm.get('qty')
+#         Creatby = itm.get('createby')
+#         CreatDate = itm.get('cratedate')
+#         Author = itm.get('author')
+#         Catagoryid = itm.get('catagoryid')
+#         photo = itm.get('photo')
+#         me = Book(bname, borrowprice, finepereday, Quantity, Creatby, CreatDate, Author, Catagoryid, photo)
+#         Add(me)
+#         return me.bookid + 'inserted Success !'
+#
+#
+# @app.route('/catagory_add', methods=['POST'])
+# def catagory_add():
+#     for itm in requesJson():
+#         name = itm.get('name')
+#         me = Catagory(name)
+#         Add(me)
+#         return me.catId + 'inserted Success !'
+#
+#
+# @app.route('/collect_add', methods=['POST'])
+# def collect_add():
+#     for itm in requesJson():
+#         date = itm.get('date')
+#         total = itm.get('total')
+#         fromdate = itm.get('fromdate')
+#         todate = itm.get('todate')
+#         collectby = itm.get('collectby')
+#         me = Collect(date, total, fromdate, todate, collectby)
+#         Add(me)
+#         return me.collectid
+#
+#
+# @app.route('/collect_detail_add', methods=['POST'])
+# def collect_detail_add():
+#     for itm in requesJson():
+#         id = itm.get('id')
+#         subtotal = itm.get('subtotal')
+#         collecttypeid = itm.get('typeid')
+#         me = Collect_details(id, subtotal, collecttypeid)
+#         Add(me)
+#         return me.collectdid
+#
+#
+# @app.route('/collect_type_add', methods=['POST'])
+# def collect_type_add():
+#     for itm in requesJson():
+#         collecttype = itm.get('type')
+#         me = Collecttype(collecttype)
+#         Add(me)
+#         return me.collecttypeid
+#
+#
+# @app.route('/expense_add', methods=['POST'])
+# def expense_add():
+#     for itm in requesJson():
+#         date = itm.get('date')
+#         total = itm.get('total')
+#         createby = itm.get('createby')
+#         me = Expense(date, total, createby)
+#         Add(me)
+#         return me.expenseid
+#
+#
+# @app.route('/expense_detail_add', methods=['POST'])
+# def expense_detail_add():
+#     for itm in requesJson():
+#         id = itm.get('id')
+#         amount = itm.get('amount')
+#         expensetype = itm.get('type')
+#         me = Expense_deltails(id, amount, expensetype)
+#         Add(me)
+#         return me.expenseDid
+#
+#
+# @app.route('/expense_type_add', methods=['POST'])
+# def expense_type_add():
+#     for itm in requesJson():
+#         name = itm.get('name')
+#         me = Expense_type(name)
+#         Add(me)
+#         return me.expenseTid
+#
+#
+# @app.route('/import_add', methods=['POST'])
+# def import_add():
+#     for itm in requesJson():
+#         desc = itm.get('desc')
+#         date = itm.get('date')
+#         total = itm.get('total')
+#         staff = itm.get('staff')
+#         supplier = itm.get('supplier')
+#         me = Import(desc, date, total, staff, supplier)
+#         Add(me)
+#         return me.importid
+#
+#
+# @app.route('/import_detail_add', methods=['POST'])
+# def import_detail_add():
+#     for itm in requesJson():
+#         autonum = itm.get('autonum')
+#         qty = itm.get('qty')
+#         cost = itm.get('cost')
+#         subtotal = itm.get('subtotal')
+#         bookid = itm.get('bookid')
+#         importid = itm.get('importid')
+#         me = Import_details(autonum, qty, cost, subtotal, bookid, importid)
+#         Add(me)
+#         return me.importDid
+#
+#
+# @app.route('/importbook_add', methods=['POST'])
+# def importbook_add():
+#     for itm in requesJson():
+#         importid = itm.get('importid')
+#         barcode = itm.get('barcode')
+#         importDid = itm.get('importDid')
+#         me = Importbook(importid, barcode, importDid)
+#         Add(me)
+#         return me.importbookid
+#
+#
+# @app.route('/supplier_add', methods=['POST'])
+# def supplier_add():
+#     for itm in requesJson():
+#         name = itm.get('name')
+#         phone = itm.get('phone')
+#         email = itm.get('email')
+#         address = itm.get('address')
+#         createdate = itm.get('createdate')
+#         createby = itm.get('createby')
+#         me = Supplier(name, phone, email, address, createdate, createby)
+#         Add(me)
+#         return me.supid
+#
+#
+# @app.route('/stock_add', methods=['POST'])
+# def stock_add():
+#     for itm in requesJson():
+#         detailid = itm.get('detailid')
+#         autonum = itm.get('autonum')
+#         status = itm.get('status')
+#         me = Stock(detailid, autonum, status)
+#         Add(me)
+#         return me.stockid
+#
+#
+# @app.route('/borrow_add', methods=['POST'])
+# def borrow_add():
+#     for itm in requesJson():
+#         date = itm.get('date')
+#         datereturn = itm.get('returndate')
+#         total = itm.get('total')
+#         staffid = itm.get('staffid')
+#         studentid = itm.get('studentid')
+#         cardid = itm.get('cardid')
+#         me = Borrow(date, datereturn, total, staffid, studentid, cardid)
+#         Add(me)
+#         return me.borrowid
+#
+#
+# @app.route('/borrow_detail_add', methods=['POST'])
+# def borrow_detail_add():
+#     for itm in requesJson():
+#         autonum = itm.get('autonum')
+#         bookid = itm.get('bookid')
+#         barcode = itm.get('barcode')
+#         status = itm.get('status')
+#         me = Borrow_details(autonum, bookid, barcode, status)
+#         Add(me)
+#         return me.borrowDId
+#
+#
+# @app.route('/return_add', methods=['POST'])
+# def return_add():
+#     for itm in requesJson():
+#         returndate = itm.get('returndate')
+#         fee = itm.get('fee')
+#         staffid = itm.get('staffid')
+#         studentid = itm.get('studentid')
+#         me = Return(returndate, fee, staffid, studentid)
+#         Add(me)
+#         return me.returnid
+#
+#
+# @app.route('/return_detail_add', methods=['POST'])
+# def return_detail_add():
+#     for itm in requesJson():
+#         id = itm.get('returnid')
+#         bookid = itm.get('bookid')
+#         barcode = itm.get('barcode')
+#         fine = itm.get('fine')
+#         lateday = itm.get('lateday')
+#         borrowid = itm.get('borrowid')
+#         me = Return_details(id, bookid, barcode, fine, lateday, borrowid)
+#         Add(me)
+#         return me.returnDid
+#
+
+@app.route('/login',methods=['POST'])
+def login():
+	username=requesJson()['name']
+	passwd=requesJson()['passwd']
+	cur.execute('select * from user_all where username=%s AND password=%s AND is_active=%s',[username,passwd,'Active'])
+	result=cur.fetchall()
+	js=[]
+	for itm in result:
+		data = {'userid': itm[0], 'username': itm[1], 'password': itm[2], 'is_Active': itm[3], 'staffname': itm[4],
+		        'rolename': itm[5]}
+		js.append(data)
+	return jsonify(js)
+    
+    
+        
 
 if __name__ == "__main__":
     app.run()

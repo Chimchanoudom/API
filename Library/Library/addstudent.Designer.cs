@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.cmsex = new System.Windows.Forms.ComboBox();
+            this.btnok = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtaddress = new System.Windows.Forms.RichTextBox();
+            this.txtphone = new System.Windows.Forms.MaskedTextBox();
+            this.dtdob = new System.Windows.Forms.DateTimePicker();
+            this.txtemail = new System.Windows.Forms.TextBox();
+            this.txtname = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -47,28 +47,29 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // comboBox1
+            // cmsex
             // 
-            this.comboBox1.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.cmsex.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmsex.FormattingEnabled = true;
+            this.cmsex.Items.AddRange(new object[] {
             "Male",
             "Female"});
-            this.comboBox1.Location = new System.Drawing.Point(161, 105);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(261, 30);
-            this.comboBox1.TabIndex = 10;
+            this.cmsex.Location = new System.Drawing.Point(161, 105);
+            this.cmsex.Name = "cmsex";
+            this.cmsex.Size = new System.Drawing.Size(261, 30);
+            this.cmsex.TabIndex = 10;
             // 
-            // button2
+            // btnok
             // 
-            this.button2.BackColor = System.Drawing.Color.Green;
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(459, 345);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(134, 40);
-            this.button2.TabIndex = 23;
-            this.button2.Text = "យល់ព្រម";
-            this.button2.UseVisualStyleBackColor = false;
+            this.btnok.BackColor = System.Drawing.Color.Green;
+            this.btnok.ForeColor = System.Drawing.Color.White;
+            this.btnok.Location = new System.Drawing.Point(459, 345);
+            this.btnok.Name = "btnok";
+            this.btnok.Size = new System.Drawing.Size(134, 40);
+            this.btnok.TabIndex = 23;
+            this.btnok.Text = "យល់ព្រម";
+            this.btnok.UseVisualStyleBackColor = false;
+            this.btnok.Click += new System.EventHandler(this.btnok_Click);
             // 
             // button1
             // 
@@ -80,6 +81,7 @@
             this.button1.TabIndex = 21;
             this.button1.Text = "ជ្រើសរើសរូបភាព";
             this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // pictureBox1
             // 
@@ -92,48 +94,48 @@
             this.pictureBox1.TabIndex = 22;
             this.pictureBox1.TabStop = false;
             // 
-            // richTextBox1
+            // txtaddress
             // 
-            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.richTextBox1.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox1.Location = new System.Drawing.Point(161, 289);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(261, 96);
-            this.richTextBox1.TabIndex = 20;
-            this.richTextBox1.Text = "";
+            this.txtaddress.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtaddress.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtaddress.Location = new System.Drawing.Point(161, 289);
+            this.txtaddress.Name = "txtaddress";
+            this.txtaddress.Size = new System.Drawing.Size(261, 96);
+            this.txtaddress.TabIndex = 20;
+            this.txtaddress.Text = "";
             // 
-            // maskedTextBox1
+            // txtphone
             // 
-            this.maskedTextBox1.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.maskedTextBox1.Location = new System.Drawing.Point(161, 197);
-            this.maskedTextBox1.Mask = "(999) 000-0000";
-            this.maskedTextBox1.Name = "maskedTextBox1";
-            this.maskedTextBox1.Size = new System.Drawing.Size(261, 29);
-            this.maskedTextBox1.TabIndex = 18;
+            this.txtphone.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtphone.Location = new System.Drawing.Point(161, 197);
+            this.txtphone.Mask = "(999) 000-0000";
+            this.txtphone.Name = "txtphone";
+            this.txtphone.Size = new System.Drawing.Size(261, 29);
+            this.txtphone.TabIndex = 18;
             // 
-            // dateTimePicker1
+            // dtdob
             // 
-            this.dateTimePicker1.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateTimePicker1.Location = new System.Drawing.Point(161, 151);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(261, 29);
-            this.dateTimePicker1.TabIndex = 17;
+            this.dtdob.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtdob.Location = new System.Drawing.Point(161, 151);
+            this.dtdob.Name = "dtdob";
+            this.dtdob.Size = new System.Drawing.Size(261, 29);
+            this.dtdob.TabIndex = 17;
             // 
-            // textBox3
+            // txtemail
             // 
-            this.textBox3.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox3.Location = new System.Drawing.Point(161, 243);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(261, 29);
-            this.textBox3.TabIndex = 19;
+            this.txtemail.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtemail.Location = new System.Drawing.Point(161, 243);
+            this.txtemail.Name = "txtemail";
+            this.txtemail.Size = new System.Drawing.Size(261, 29);
+            this.txtemail.TabIndex = 19;
             // 
-            // textBox1
+            // txtname
             // 
-            this.textBox1.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(161, 59);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(261, 29);
-            this.textBox1.TabIndex = 8;
+            this.txtname.Font = new System.Drawing.Font("Palatino Linotype", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtname.Location = new System.Drawing.Point(161, 59);
+            this.txtname.Name = "txtname";
+            this.txtname.Size = new System.Drawing.Size(261, 29);
+            this.txtname.TabIndex = 8;
             // 
             // label7
             // 
@@ -206,15 +208,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 32F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(621, 400);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.cmsex);
+            this.Controls.Add(this.btnok);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.maskedTextBox1);
-            this.Controls.Add(this.dateTimePicker1);
-            this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtaddress);
+            this.Controls.Add(this.txtphone);
+            this.Controls.Add(this.dtdob);
+            this.Controls.Add(this.txtemail);
+            this.Controls.Add(this.txtname);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -236,15 +238,15 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ComboBox cmsex;
+        private System.Windows.Forms.Button btnok;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.MaskedTextBox maskedTextBox1;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.RichTextBox txtaddress;
+        private System.Windows.Forms.MaskedTextBox txtphone;
+        private System.Windows.Forms.DateTimePicker dtdob;
+        private System.Windows.Forms.TextBox txtemail;
+        private System.Windows.Forms.TextBox txtname;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;

@@ -128,11 +128,10 @@ E:\Project\library\Library\Library\obj\Debug\Library.csprojResolveAssemblyRefere
 E:\Project\library\Library\Library\obj\Debug\Library.ReturnBookC.resources
 E:\Project\library\Library\Library\obj\Debug\Library.importBookc.resources
 E:\Project\library\Library\Library\obj\Debug\Library.Expireandpenalty.resources
-E:\Project\API\Library\Library\bin\Debug\Library.exe.config
-E:\Project\API\Library\Library\obj\Debug\Library.exe
-E:\Project\API\Library\Library\obj\Debug\Library.pdb
 E:\Project\API\Library\Library\bin\Debug\Library.exe
-E:\Project\API\Library\Library\bin\Debug\Library.pdb
+E:\Project\API\Library\Library\bin\Debug\Library.exe.config
+E:\Project\API\Library\Library\bin\Debug\Newtonsoft.Json.dll
+E:\Project\API\Library\Library\bin\Debug\Newtonsoft.Json.xml
 E:\Project\API\Library\Library\obj\Debug\Library.csprojResolveAssemblyReference.cache
 E:\Project\API\Library\Library\obj\Debug\Library.addbook.resources
 E:\Project\API\Library\Library\obj\Debug\Library.addborrow.resources
@@ -175,3 +174,6 @@ E:\Project\API\Library\Library\obj\Debug\Library.testing.resources
 E:\Project\API\Library\Library\obj\Debug\Library.User_and_Privilage.resources
 E:\Project\API\Library\Library\obj\Debug\Library.BorrowBook.resources
 E:\Project\API\Library\Library\obj\Debug\Library.csproj.GenerateResource.Cache
+E:\Project\API\Library\Library\obj\Debug\Library.exe
+E:\Project\API\Library\Library\obj\Debug\Library.pdb
+E:\Project\API\Library\Library\bin\Debug\Library.pdb

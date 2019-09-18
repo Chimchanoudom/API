@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Library.Data;
 
 
 
@@ -15,6 +16,7 @@ namespace Library
 {
     public partial class Form1 : Form
     {
+        static User us = new User();
         public Form1()
         {
             InitializeComponent();
@@ -35,6 +37,7 @@ namespace Library
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            lbluser.Text +=" "+ us.Staffname;
             timer1.Start();
             Expireandpenalty ep = new Expireandpenalty();
             mdi.main(this, ep);

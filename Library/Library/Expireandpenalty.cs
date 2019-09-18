@@ -34,7 +34,7 @@ namespace Library
             //int i = dataGridView1.Rows[0].Index;
             //string s = (string)dataGridView1.Rows[i].Cells[5].Value;
             //MessageBox.Show(s);
-            returnbook rb = new returnbook();
+            addreturn rb = new addreturn();
             mdi.main(encapulation.Parent1, rb);
         }
 

@@ -8,12 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Library.Class;
+using Library.WebAPI;
 
 namespace Library
 {
     public partial class student : Form
     {
-        public student()
+        public  student()
+        {
+            InitializeComponent();
+            refresh();
+
+        }
+       public student(string s="")
         {
             InitializeComponent();
         }
@@ -35,6 +42,38 @@ namespace Library
         private void btndetail_Click(object sender, EventArgs e)
         {
             
+        }
+        public void getdata()
+        {
+           
+            studentdata.getall();
+            
+           
+        }
+        public void refresh()
+        {
+            studentdata.dt.Columns.Clear();
+            studentdata.dt.Rows.Clear();
+            foreach (DataGridViewColumn i in dgvStudent.Columns)
+            {
+                if (i.HeaderText == "រូបភាព")
+                {
+                    studentdata.dt.Columns.Add(i.HeaderText, typeof(Image));
+                }
+                else
+                {
+                    studentdata.dt.Columns.Add(i.HeaderText);
+                }
+            }
+            dgvStudent.Columns.Clear();
+            dgvStudent.DataSource = studentdata.dt;
+           // ((DataGridViewImageColumn)dgvStudent.Columns["រូបភាព"]).ImageLayout = DataGridViewImageCellLayout.Zoom;
+
+        }
+        private void student_Load(object sender, EventArgs e)
+        {
+            getdata();
+            dgvStudent.ClearSelection();
         }
     }
 }
